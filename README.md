@@ -1,5 +1,4 @@
-[![Charizard](https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif)](https://pokemondb.net/pokedex/charizard)
-# Pokémon Web Game
+[![Charizard](https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif)](https://pokemondb.net/pokedex/charizard) # Pokémon Web Game
 
 This project is a Pokémon Game for CMSC433. Follow the instructions below to set it up and run it locally.
 
