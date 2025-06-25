@@ -1,3 +1,4 @@
+[![Charizard](https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif)](https://pokemondb.net/pokedex/charizard)
 # Pokémon Web Game
 
 This project is a Pokémon Game for CMSC433. Follow the instructions below to set it up and run it locally.
@@ -49,7 +50,7 @@ pip freeze > requirements.txt
 Make sure your environment is activated, then run:
 
 ```bash
-python app.py
+python proj3.py
 ```
 
 You should see output like:
