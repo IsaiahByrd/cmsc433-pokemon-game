@@ -1,6 +1,6 @@
-# Pokémon Flask Server
+# Pokémon Web Game
 
-This project is a Flask-based web server for CMSC433. Follow the instructions below to set it up and run it locally.
+This project is a Pokémon Game for CMSC433. Follow the instructions below to set it up and run it locally.
 
 ## Requirements
 
