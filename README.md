@@ -56,10 +56,10 @@ You should see output like:
 * Running on http://127.0.0.1:5000/
 
 
-### 🛑 To Stop the Server
+### To Stop the Server
 Use Ctrl + C in the terminal.
 
-### 🔁 Deactivate the Virtual Environment
+### Deactivate the Virtual Environment
 After you're done, run:
 ```bash
 deactivate
