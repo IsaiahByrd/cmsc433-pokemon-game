@@ -1,9 +1,6 @@
 <p align="left" style="display: flex; align-items: center;">
   <strong style="font-size: 40px;">Pokémon Battle</strong>
-  &nbsp;&nbsp;
-  <a href="https://pokemondb.net/pokedex/charizard">
     <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif" alt="Charizard">
-  </a>
 </p>
 
 
