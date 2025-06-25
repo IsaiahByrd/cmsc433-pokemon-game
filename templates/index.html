@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokémon Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Welcome to the Pokémon Game!</h1>
+    <canvas id="gameCanvas" width="800" height="600" style="border:1px solid #000;"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Example: Draw a red square
+        ctx.fillStyle = "red";
+        ctx.fillRect(100, 100, 50, 50);
+    </script>
+</body>
+</html>
