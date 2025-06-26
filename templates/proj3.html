@@ -9,15 +9,25 @@
     <script src="{{ url_for('static', filename='proj3.js') }}" async></script>
 </head>
 <body>
-    <div id="title">
+    <div class="account">
+        <a href="{{ url_for('login') }}">
+            <button type="button">Login</button>
+        </a>
+        <a href="{{ url_for('register') }}">
+            <button type="button">Register</button>
+        </a>
+    </div>
+
+    <div id="title">    
         <img id="titleSprite1">
         <img id="pokemonTitle">
         <img id="titleSprite2">
     </div>
+
     <br><br><br>
+
     <a href="{{ url_for('menu') }}">
         <button type="button">Play Now</button>
     </a>
-    <p></p>
 </body>
 </html>

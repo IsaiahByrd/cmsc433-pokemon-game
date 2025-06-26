@@ -1,3 +1,9 @@
+.account{
+    position: absolute;
+    top: 20px;
+    right: 50px;
+}
+
 body {
     background-color: #ffffff;
     font-family: Arial, sans-serif;

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import pandas as pd
@@ -71,6 +71,33 @@ def home():
 def menu():
     return render_template('menu/menu.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        # db = get_db()
+
+        # database logic for jason ("SELECT * FROM user WHERE username = ?"), (username,))
+
+    return render_template('/auth/login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        confirmPassword = request.form["confirmPassword"]
+        # db = get_db()
+    
+        if password != confirmPassword:
+            # let user know passwords don't match
+            return render_template('/auth/register.html', username=username)
+        
+        # db logic goes here
+    return render_template('/auth/register.html')
+
 @app.route('/battle')
 def battle():
     return render_template('menu/battle/battle.html')
@@ -80,6 +107,7 @@ def teambuilder():
 @app.route('/viewcollection')
 def viewcollection():
     return render_template('menu/viewcollection/viewcollection.html')
+
 
 if __name__ == '__main__':
     with app.app_context():
