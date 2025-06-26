@@ -41,8 +41,8 @@ h1 {
 
 #titleSprite1, #titleSprite2 {
     /* Style both Pokemon sprites to be exactly the same size */
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     
     /* Force both images to fill the exact same dimensions */
     object-fit: contain; /* Keeps aspect ratio, fits within dimensions */

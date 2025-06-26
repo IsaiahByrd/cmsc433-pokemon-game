@@ -3,8 +3,8 @@ const titleSprite2 = document.getElementById('titleSprite2');
 const pokemonTitle = document.getElementById('pokemonTitle');
 
 // Set GIF sources for both sprites
-titleSprite1.src = "https://img.pokemondb.net/sprites/black-white/anim/normal/blastoise.gif";
-titleSprite2.src = "https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif";
+titleSprite1.src = "https://img.pokemondb.net/sprites/black-white/anim/normal/pikachu.gif";
+titleSprite2.src = "https://img.pokemondb.net/sprites/black-white/anim/normal/pikachu.gif";
 
 // set the title text
 pokemonTitle.src = "static/pokemon-title.png";
