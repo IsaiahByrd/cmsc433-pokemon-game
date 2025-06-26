@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokemon</title>
+    <title>Pokemon Battle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='proj3.css') }}">
 </head>
 <body>
-    <h1>Pokemon Game</h1>
-    <div id="pokemon-container">
-        <img id="pokemonSprite" src="" alt="Pokemon sprite" style="display: none;">
+    <div id="title">
+        <img id="titleSprite1">
+        <img id="pokemonTitle">
+        <img id="titleSprite2">
     </div>
     <script src="{{ url_for('static', filename='proj3.js') }}"></script>
 </body>

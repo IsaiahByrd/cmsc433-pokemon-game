@@ -1,16 +1,33 @@
-const pokemonSprite = document.getElementById('pokemonSprite');
+const titleSprite1 = document.getElementById('titleSprite1');
+const titleSprite2 = document.getElementById('titleSprite2');
+const pokemonTitle = document.getElementById('pokemonTitle');
 
-// Set the source and show the animated GIF
-pokemonSprite.src = "https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif";
+// Set GIF sources for both sprites
+titleSprite1.src = "https://img.pokemondb.net/sprites/black-white/anim/normal/blastoise.gif";
+titleSprite2.src = "https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif";
 
-pokemonSprite.onload = function () {
-    // Show the image once it's loaded
-    pokemonSprite.style.display = 'block';
-    console.log('Pokemon sprite loaded successfully!');
+// set the title text
+pokemonTitle.src = "static/pokemon-title.png";
+
+// Show sprites and apply styling once they load
+titleSprite1.onload = function() {
+    titleSprite1.style.display = 'block';
+    titleSprite1.style.transform = 'scaleX(-1)'; // flip the first sprite horizontally
+    console.log('Blastoise sprite loaded and flipped!');
 };
 
-pokemonSprite.onerror = function () {
-    console.error('Failed to load Pokemon image');
-    // Show fallback text
-    document.getElementById('pokemon-container').innerHTML = '<p>Failed to load Pokemon sprite</p>';
+titleSprite2.onload = function() {
+    titleSprite2.style.display = 'block';
+    console.log('Charizard sprite loaded!');
 };
+
+// Error handling
+titleSprite1.onerror = function() {
+    console.error('Failed to load Blastoise sprite');
+};
+
+titleSprite2.onerror = function() {
+    console.error('Failed to load Charizard sprite');
+};
+
+
