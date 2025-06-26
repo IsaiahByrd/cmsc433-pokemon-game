@@ -67,6 +67,20 @@ def home():
     # Don't pass pokemon data to template to avoid displaying all names
     return render_template('proj3.html')
 
+@app.route('/menu')
+def menu():
+    return render_template('menu/menu.html')
+
+@app.route('/battle')
+def battle():
+    return render_template('menu/battle/battle.html')
+@app.route('/teambuilder')
+def teambuilder():
+    return render_template('menu/teambuilder/teambuilder.html')
+@app.route('/viewcollection')
+def viewcollection():
+    return render_template('menu/viewcollection/viewcollection.html')
+
 if __name__ == '__main__':
     with app.app_context():
         # db_path = 'instance/pokemon.db'
