@@ -3,17 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokemon</title>
+    <title>Pokemon Battle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='proj3.css') }}">
+    <script src="{{ url_for('static', filename='proj3.js') }}" async></script>
 </head>
 <body>
-    <h1>Pokemon Game</h1>
-    {% for poke in pokemon %}
-    <h5>{{ poke['Name'] }}</h5>
-    {% endfor %}
-    <div id="pokemon-container">
-        <img id="pokemonSprite" src="" alt="Pokemon sprite" style="display: none;">
+    <div class="account">
+        <a href="{{ url_for('login') }}">
+            <button type="button">Login</button>
+        </a>
+        <a href="{{ url_for('register') }}">
+            <button type="button">Register</button>
+        </a>
     </div>
-    <script src="{{ url_for('static', filename='proj3.js') }}"></script>
+
+    <div id="title">    
+        <img id="titleSprite1">
+        <div id="titleContainer">
+            <img id="pokemonTitle">
+            <div id="battleText">Battle</div>
+        </div>
+        <img id="titleSprite2">
+    </div>
+
+    <br><br><br>
+
+    <a href="{{ url_for('menu') }}">
+        <button id="playButton" type="button">Play Now</button>
+    </a>
 </body>
 </html>

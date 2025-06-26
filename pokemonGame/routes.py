@@ -6,64 +6,53 @@ from pokemonGame.models import User
 def index():
     return render_template('proj3.html')
 
-# @app.route('/register', methods=['GET', 'POST'])
-# def register():
-#     if request.method == 'POST':
-#         # PSEUDOCODE for handling registration
-#         # 1. Get username, email, and password from request.form
-#         # 2. Check if username or email already exist in the 'user' table.
-#         # 3. If they don't exist:
-#         #    a. Create a User object from models.py
-#         #    b. Set the password using user.set_password(password)
-#         #    c. INSERT the new user's data into the 'user' table.
-#         #    d. Commit the database transaction.
-#         #    e. flash('Registration successful! Please log in.')
-#         #    f. return redirect(url_for('login'))
-#         # 4. If they exist, flash an error message.
-#         pass # Replace this with actual logic
-#     return render_template('register.html', title='Register')
+@app.route('/')
+def home():
+    # Don't pass pokemon data to template to avoid displaying all names
+    return render_template('proj3.html')
 
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         # PSEUDOCODE for handling login
-#         # 1. Get username and password from request.form
-#         # 2. SELECT user data from the 'user' table where username matches.
-#         # 3. If a user is found:
-#         #    a. Create a User object.
-#         #    b. Load the stored password_hash into the user object.
-#         #    c. If user.check_password(password_from_form) is True:
-#         #       i. Store user's ID in the session (flask.session['user_id'] = user.id)
-#         #       ii. return redirect(url_for('capture'))
-#         #    d. Else, flash('Invalid password')
-#         # 4. If no user is found, flash('Invalid username')
-#         pass # Replace this with actual logic
-#     return render_template('login.html', title='Sign In')
+@app.route('/menu')
+def menu():
+    return render_template('menu/menu.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
 
-# @app.route('/battle')
-# def battle():
-#     # PSEUDOCODE for battle screen
-#     # 1. Connect to the DB.
-#     # 2. SELECT two random pokemon from the 'pokemon' table.
-#     # 3. Pass the data for these two pokémon to the template.
-#     # 4. Close the DB connection.
-#     return render_template('battle.html', title='Battle!')
+        # db = get_db()
 
+        # database logic for jason ("SELECT * FROM user WHERE username = ?"), (username,))
 
-# @app.route('/capture')
-# def capture():
-#     # This requires the user to be logged in. Add a check for that.
+    return render_template('/auth/login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        confirmPassword = request.form["confirmPassword"]
+        # db = get_db()
     
-#     conn = get_db_connection()
-#     cursor = conn.cursor(dictionary=True)
-#     cursor.execute("SELECT id, name, type1 FROM pokemon ORDER BY id")
-#     all_pokemon = cursor.fetchall()
-#     cursor.close()
-#     conn.close()
-    
-#     return render_template('capture.html', title='Capture Pokémon', pokemon_list=all_pokemon)
+        if password != confirmPassword:
+            # let user know passwords don't match
+            return render_template('/auth/register.html', username=username)
+        
+        # db logic goes here
+    return render_template('/auth/register.html')
 
+@app.route('/battle')
+def battle():
+    return render_template('menu/battle/battle.html')
+
+@app.route('/teambuilder')
+def teambuilder():
+    return render_template('menu/teambuilder/teambuilder.html')
+
+@app.route('/viewcollection')
+def viewcollection():
+    return render_template('menu/viewcollection/viewcollection.html')
 
 @app.route('/api/pokemon', methods=['GET'])
 def get_pokemon_api():

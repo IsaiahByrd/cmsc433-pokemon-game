@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+    <div class="title">
+        <a href="{{ url_for('home')}}">
+            <img id="pokemonTitle" src="{{ url_for('static', filename='pokemon-title.png') }}">
+        </a>
+    </div>
+
+    <form class="loginForm" method="post">
+        <h1>Register</h1>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required="required" value="{{ username|default('') }}">
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" required="required">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="text" id="confirmPassword" name="confirmPassword" required="required">
+        <input type="submit" id="submit" value="Register">
+    </form>
+</body>
+</html>

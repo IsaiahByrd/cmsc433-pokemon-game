@@ -1,32 +1,285 @@
+.account{
+    position: absolute;
+    top: 20px;
+    right: 50px;
+}
+
 body {
-    background-color: #f0f0f0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-attachment: fixed;
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 0;
     padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
 }
 
+/* Add animated background particles */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent);
+    background-repeat: repeat;
+    background-size: 150px 150px;
+    animation: sparkle 6s linear infinite;
+    z-index: -1;
+}
+
+@keyframes sparkle {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-150px); }
+}
+
+#title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px; /* space between title and sprite */
+    margin-bottom: 50px;
+    animation: titleEntrance 2s ease-out;
+    position: relative;
+}
+
+@keyframes titleEntrance {
+    0% { 
+        opacity: 0; 
+        transform: translateY(-50px) scale(0.8); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+#titleContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#pokemonTitle {
+    max-width: 450px;
+    height: auto;
+    image-rendering: pixelated; /* keeps pixel art crisp */
+    filter: drop-shadow(0 4px 8px rgba(255,215,0,0.5));
+    animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+#battleText {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.2rem;
+    color: #dcd50d;
+    text-shadow: 
+        2px 2px 0px #000,
+        0 0 10px rgba(255,215,0,0.5);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: battleTextGlow 2s ease-in-out infinite alternate;
+    margin-top: -5px; /* Pull slightly closer to title */
+}
+
+@keyframes battleTextGlow {
+    0% { 
+        text-shadow: 
+            2px 2px 0px #000,
+            0 0 10px rgba(255,215,0,0.5);
+        transform: scale(1);
+    }
+    100% { 
+        text-shadow: 
+            2px 2px 0px #000,
+            0 0 15px rgba(255,215,0,0.8),
+            0 0 20px rgba(255,215,0,0.4);
+        transform: scale(1.02);
+    }
+}
+
+/* Keep h1 styles for other potential headings */
 h1 {
     color: #333;
     margin-bottom: 20px;
+    
+    /* 8-bit retro gaming font like old Pokemon games */
+    font-family: 'Press Start 2P', monospace;
+    
+    font-weight: 400; /* Press Start 2P looks best at normal weight */
+    font-size: 1.8rem; /* Slightly smaller for better readability with pixel font */
+    text-shadow: 2px 2px 0px #000; /* Sharp pixel-style shadow */
+    letter-spacing: 2px; /* Spacing between letters for retro feel */
 }
 
-#pokemon-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
+.pixel-text { /* class for pixelated text */
+    font-family: 'Press Start 2P', monospace;
 }
 
-#pokemonSprite {
-    /* Make the sprite bigger - you can adjust these values */
-    width: 150px;
-    height: 150px;
+#titleSprite1, #titleSprite2 {
+    /* Style both Pokemon sprites to be exactly the same size */
+    width: 120px;
+    height: 120px;
+    
+    /* Force both images to fill the exact same dimensions */
+    object-fit: contain; /* Keeps aspect ratio, fits within dimensions */
+    
+    /* Initially hidden until loaded */
+    display: none;
+    
+    /* Remove margin/padding that might interfere */
+    margin: 0;
+    padding: 0;
+    
+    /* Ensure crisp pixel art */
+    image-rendering: pixelated;
+    
+    /* Ensure it doesn't break the flex layout */
+    flex-shrink: 0;
+    
+    /* Add hover and animation effects */
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
 
+#titleSprite1 {
+    animation: bounceLeft 2s ease-in-out infinite;
+}
+
+#titleSprite2 {
+    animation: bounceRight 2s ease-in-out infinite;
+}
+
+@keyframes bounceLeft {
+    0%, 100% { transform: translateY(0) scaleX(-1); }
+    50% { transform: translateY(-10px) scaleX(-1); }
+}
+
+@keyframes bounceRight {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#titleSprite1:hover, #titleSprite2:hover {
+    transform: scale(1.1) !important;
+}
+
+/* Keep old titleSprite for backwards compatibility */
+#titleSprite {
+    /* make the sprite bigger - you can adjust these values */
+    width: 70px;  /* smaller size to fit nicely with title */
+    height: 70px;
     
+    /* remove margin/padding that might interfere */
+    margin: 0;
+    padding: 0;
     
-    /* Smooth scaling */
-    image-rendering: pixelated; /* Keeps pixel art crisp */
+    /* ensure it doesn't break the flex layout */
+    flex-shrink: 0;
+}
+
+/* play now button */
+#playButton {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 
+        0 4px 15px rgba(118, 75, 162, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: buttonPulse 2s ease-in-out infinite;
+}
+
+#playButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+#playButton:hover::before {
+    left: 100%;
+}
+
+#playButton:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 8px 25px rgba(118, 75, 162, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    background: linear-gradient(45deg, #5a67d8, #6b46c1);
+}
+
+#playButton:active {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 
+        0 4px 15px rgba(118, 75, 162, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+@keyframes buttonPulse {
+    0%, 100% { box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); }
+    50% { box-shadow: 0 4px 20px rgba(118, 75, 162, 0.6); }
+}
+
+/* Link styling */
+a {
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 30px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #title {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    #pokemonTitle {
+        max-width: 300px;
+    }
+    
+    #titleSprite1, #titleSprite2 {
+        width: 80px;
+        height: 80px;
+    }
+    
+    #pokemonTitle {
+        max-width: 300px;
+    }
+    
+    #battleText {
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
+    
+    #playButton {
+        font-size: 14px;
+        padding: 12px 24px;
+    }
 }
 
 
