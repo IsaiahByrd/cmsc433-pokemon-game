@@ -64,10 +64,8 @@ def import_data_from_excel(excel_file_path):
 
 @app.route('/')
 def home():
-    pokemon = Pokemon.query.all()
-    print("pokemon are", pokemon)
-    if pokemon:
-        return render_template('proj3.html', pokemon=pokemon)
+    # Don't pass pokemon data to template to avoid displaying all names
+    return render_template('proj3.html')
 
 if __name__ == '__main__':
     with app.app_context():

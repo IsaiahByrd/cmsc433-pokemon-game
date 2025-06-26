@@ -1,7 +1,7 @@
 const pokemonSprite = document.getElementById('pokemonSprite');
 
 // Set the source and show the animated GIF
-pokemonSprite.src = "https://img.pokemondb.net/sprites/black-white/anim/back-normal/charmander.gif";
+pokemonSprite.src = "https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif";
 
 pokemonSprite.onload = function () {
     // Show the image once it's loaded
