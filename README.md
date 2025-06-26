@@ -51,11 +51,23 @@ If you don't have a requirements.txt yet, generate it with:
 pip freeze > requirements.txt
 ```
 
-### 4. Run the Flask Server
+### 4. Instal XAMPP
+* Follow the link to download xampp https://www.apachefriends.org/download.html
+* On XAMPP Control Panel Start APACHE and Start MySQL
+* Press Admin to the right of the start button for MySql in order to get to the phpMyAdmin page
+* Click the SQL tab to the left of Status
+
+### 5. Run the createAll.sql file
+* Go back to the cloned repository and open the ***creatALL.SQL*** file
+* Copy all the contents of the file
+* Paste the content into the SQL tab in the phpMyAdmin page
+
+### 5. Run the Flask Server
 Make sure your environment is activated, then run:
 
 ```bash
-python proj3.py
+python db_setup.py # Only Needs to be run ONCE as it loads the pokemon into the database
+python proj3.py  # Run Anytime you want to start the app locally
 ```
 
 You should see output like:
