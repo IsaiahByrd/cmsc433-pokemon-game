@@ -74,9 +74,11 @@ def menu():
 @app.route('/battle')
 def battle():
     return render_template('menu/battle/battle.html')
+
 @app.route('/teambuilder')
 def teambuilder():
     return render_template('menu/teambuilder/teambuilder.html')
+
 @app.route('/viewcollection')
 def viewcollection():
     return render_template('menu/viewcollection/viewcollection.html')

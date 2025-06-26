@@ -13,21 +13,21 @@ pokemonTitle.src = "static/pokemon-title.png";
 titleSprite1.onload = function() {
     titleSprite1.style.display = 'block';
     titleSprite1.style.transform = 'scaleX(-1)'; // flip the first sprite horizontally
-    console.log('Blastoise sprite loaded and flipped!');
+    console.log('sprite loaded and flipped!');
 };
 
 titleSprite2.onload = function() {
     titleSprite2.style.display = 'block';
-    console.log('Charizard sprite loaded!');
+    console.log('sprite loaded!');
 };
 
 // Error handling
 titleSprite1.onerror = function() {
-    console.error('Failed to load Blastoise sprite');
+    console.error('Failed to load first sprite');
 };
 
 titleSprite2.onerror = function() {
-    console.error('Failed to load Charizard sprite');
+    console.error('Failed to load second sprite');
 };
 
 

@@ -11,12 +11,15 @@
 <body>
     <div id="title">
         <img id="titleSprite1">
-        <img id="pokemonTitle">
+        <div id="titleContainer">
+            <img id="pokemonTitle">
+            <div id="battleText">Battle</div>
+        </div>
         <img id="titleSprite2">
     </div>
     <br><br><br>
     <a href="{{ url_for('menu') }}">
-        <button type="button">Play Now</button>
+        <button id="playButton" type="button">Play Now</button>
     </a>
 </body>
 </html>
