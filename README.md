@@ -61,6 +61,7 @@ pip freeze > requirements.txt
 * Go back to the cloned repository and open the ***creatALL.SQL*** file
 * Copy all the contents of the file
 * Paste the content into the SQL tab in the phpMyAdmin page
+* Click ***GO***
 
 ### 5. Run the Flask Server
 Make sure your environment is activated, then run:

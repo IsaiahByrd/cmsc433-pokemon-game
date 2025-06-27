@@ -2,9 +2,7 @@ from flask import render_template, jsonify, request, flash, redirect, url_for
 from pokemonGame import app, get_db_connection
 from pokemonGame.models import User
 
-@app.route('/')
-def index():
-    return render_template('proj3.html')
+from werkzeug.security import generate_password_hash, check_password_hash
 
 @app.route('/')
 def home():
@@ -21,11 +19,21 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        # db = get_db()
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
 
-        # database logic for jason ("SELECT * FROM user WHERE username = ?"), (username,))
+        if user and check_password_hash(user['password_hash'], password):
+            # Login successful, redirect to menu or dashboard
+            return redirect(url_for('menu'))
+        else:
+            flash("Invalid username or password", "danger")
+            return render_template('auth/login.html', username=username)
 
-    return render_template('/auth/login.html')
+    return render_template('auth/login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -33,14 +41,31 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
         confirmPassword = request.form["confirmPassword"]
-        # db = get_db()
-    
+
         if password != confirmPassword:
-            # let user know passwords don't match
-            return render_template('/auth/register.html', username=username)
-        
-        # db logic goes here
-    return render_template('/auth/register.html')
+            flash("Passwords do not match", "danger")
+            return render_template('auth/register.html', username=username)
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM user WHERE username = %s", (username,))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            flash("Username already exists", "danger")
+            cursor.close()
+            conn.close()
+            return render_template('auth/register.html', username=username)
+
+        password_hash = generate_password_hash(password)
+        cursor.execute("INSERT INTO users (username, password_hash) VALUES (%s, %s)", (username, password_hash))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        flash("Registration successful! Please log in.", "success")
+        return redirect(url_for('login'))
+
+    return render_template('auth/register.html')
 
 @app.route('/battle')
 def battle():
