@@ -3,7 +3,7 @@
         width="80"
         height="80"
         style="transform: scaleX(-1);">
-    <span style="font-size: 3em; font-weight: bold; margin: 0 20px;">Pokémon Battle</span>
+    <span style="font-size: 80; font-weight: bold; margin: 0 20px;">Pokémon Battle</span>
     <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/groudon.gif" alt="Groudon"
         width="80"
         height="80">
