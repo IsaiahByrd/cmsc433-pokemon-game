@@ -1,5 +1,5 @@
 <p align="left" style="display: flex; align-items: center;">
-  <strong>Pokémon Battle</strong>
+  <h1>Pokémon Battle</h1>
     <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif" alt="Charizard"
         width="25"
         height="25">
