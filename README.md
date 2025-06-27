@@ -1,9 +1,15 @@
-<p align="left" style="display: flex; align-items: center;">
-  <h1>Pokémon Battle</h1>
-    <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif" alt="Charizard"
-        width="25"
-        height="25">
+<p align="center" style="display: flex; align-items: center; justify-content: center;">
+    <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/kyogre.gif" alt="Kyogre"
+        width="80"
+        height="80"
+        style="transform: scaleX(-1);">
+    <span style="font-size: 3em; font-weight: bold; margin: 0 20px;">Pokémon Battle</span>
+    <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/groudon.gif" alt="Groudon"
+        width="80"
+        height="80">
 </p>
+
+---
 
 
 This project is a Pokémon Game for CMSC433 at UMBC. Follow the instructions below to set it up and run it locally.
