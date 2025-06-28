@@ -1,3 +1,6 @@
+# Legacy code - kept for reference but commented out
+# This code has been refactored into the pokemonGame package
+
 # from flask import Flask, render_template, jsonify
 # import mariadb
 # from flask_sqlalchemy import SQLAlchemy
@@ -78,55 +81,6 @@
 #         print("Database initialization complete. Connection closed.")
 
 
-
-
-# # def import_data_from_excel(excel_file_path):
-# #     if not os.path.exists(excel_file_path):
-# #         print(f"Error: Excel file not found at '{excel_file_path}'")
-# #         return
-
-# #     try:
-# #         df = pd.read_excel(excel_file_path)
-# #         print(f"Attempting to import {len(df)} rows from '{excel_file_path}'...")
-
-# #         # Optional: Clear existing data if you want to re-import or prevent duplicates
-# #         # with app.app_context(): # Ensure you are in an app context for query operations
-# #         Pokemon.query.delete()
-# #         db.session.commit()
-# #         print("Cleared existing data from Pokemon table.")
-
-# #         for index, row in df.iterrows():
-# #             # if 'Name' not in row or '#' not in row or 'Type1' not in row or 'Legendary' not in row:
-# #             #     print(f"Skipping row {index}: Missing required columns. Row data: {row.to_dict()}")
-# #             #     continue
-
-# #             pokemon = Pokemon(
-# #                 Num=row['#'],
-# #                 Name=row['Name'],
-# #                 Type1=row['Type 1'],
-# #                 Type2=row['Type 2'],
-# #                 Total=row['Total'],
-# #                 HP=row['HP'],
-# #                 Attack=row['Attack'],
-# #                 Defense=row['Defense'],
-# #                 SpAttack=row['Sp. Atk'],
-# #                 SpDefense=row['Sp. Def'],
-# #                 Speed=row['Speed'],
-# #                 Generation=row['Generation'],
-# #                 Legendary=row['Legendary']
-# #             )
-# #             db.session.add(pokemon)
-
-# #         db.session.commit()
-# #         print("Data imported successfully!")
-
-# #     except KeyError as e:
-# #         print(f"Error: Missing column in Excel file. Please ensure columns exist. Detail: {e}")
-# #         db.session.rollback()
-# #     except Exception as e:
-# #         db.session.rollback()
-# #         print(f"An unexpected error occurred during data import: {e}")
-
 # @app.route('/')
 # def home():
 #     pokemon = Pokemon.query.all()
@@ -150,12 +104,7 @@
     
 #     return jsonify(pokemon_data)
 
-
-# if __name__ == '__main__':
-#     initialize_db()
-#     app.run(debug=True)
-
-
+# Modern approach using pokemonGame package
 from pokemonGame import app
 
 if __name__ == '__main__':
