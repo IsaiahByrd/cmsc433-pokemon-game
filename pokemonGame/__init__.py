@@ -1,7 +1,11 @@
 from flask import Flask
 import mariadb
+import os
 
 app = Flask(__name__)
+
+# Secret key for session management (in production, use environment variable)
+app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-this-in-production')
 
 DB_CONFIG =  {
     'user': 'root',

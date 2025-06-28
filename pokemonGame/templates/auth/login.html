@@ -18,6 +18,16 @@
     
     <form class="loginForm" method="post">
         <h1>Login</h1>
+        
+        <!-- Flash messages for feedback -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required="required" value="{{ username|default('') }}" placeholder="Enter username">
         <label for="password">Password:</label>

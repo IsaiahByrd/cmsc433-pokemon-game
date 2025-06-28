@@ -256,7 +256,83 @@ body::after {
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* Responsive design */
+/* Flash messages */
+.flash-message {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 1.4;
+}
+
+.flash-message.success {
+    background: rgba(80, 200, 120, 0.2);
+    border: 1px solid rgba(80, 200, 120, 0.4);
+    color: #50C878;
+    box-shadow: 0 0 10px rgba(80, 200, 120, 0.3);
+}
+
+.flash-message.error {
+    background: rgba(255, 107, 53, 0.2);
+    border: 1px solid rgba(255, 107, 53, 0.4);
+    color: #FF6B35;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+}
+
+.flash-message.warning {
+    background: rgba(241, 196, 15, 0.2);
+    border: 1px solid rgba(241, 196, 15, 0.4);
+    color: #F1C40F;
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
+}
+
+.flash-message.info {
+    background: rgba(90, 103, 216, 0.2);
+    border: 1px solid rgba(90, 103, 216, 0.4);
+    color: #5A67D8;
+    box-shadow: 0 0 10px rgba(90, 103, 216, 0.3);
+}
+
+/* Random option styling */
+.random-option {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.random-option label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: #ffffff;
+    text-shadow: 1px 1px 0px #000;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.random-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #5A67D8;
+    cursor: pointer;
+}
+
+#manual-fields {
+    transition: opacity 0.3s ease;
+    width: 100%;
+}
+
+/* Enhanced responsive design */
 @media (max-width: 768px) {
     .loginForm {
         min-width: 280px;

@@ -108,9 +108,10 @@ pip freeze > requirements.txt
 ### 7. Run the Flask Server
 Make sure your virtual environment is still active.
 
-Run the database setup (ONLY ONCE):
+Run the database setup and user authentication setup (ONLY ONCE):
 ```bash
 python db_setup.py # Only Needs to be run ONCE as it loads the pokemon into the database
+python setup_auth.py # Only needs to be run ONCE
 ```
 Then run the app:
 ```bash
