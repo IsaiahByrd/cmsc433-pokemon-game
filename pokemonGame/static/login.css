@@ -1,18 +1,278 @@
 /* This css file serves both login.html and register.html */
 
-.title{
+body {
+    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
 }
 
-#pokemonTitle{
-    width: 150px;
-    height:auto;
+/* Seamless star field with overlapping layers - matches homepage */
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%; /* Extra height to ensure seamless overlap */
+    z-index: -1;
 }
 
-.loginForm{
+/* First star layer - Main pattern */
+body::before {
+    background-image: 
+        radial-gradient(2px 2px at 15% 20%, #fff, transparent),
+        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 35% 10%, #fff, transparent),
+        radial-gradient(1px 1px at 45% 60%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(2px 2px at 55% 35%, #fff, transparent),
+        radial-gradient(1px 1px at 65% 80%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 75% 15%, #fff, transparent),
+        radial-gradient(1px 1px at 85% 50%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 95% 70%, #fff, transparent),
+        radial-gradient(1px 1px at 5% 90%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 15% 65%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 25% 85%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 35% 45%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 45% 25%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 55% 75%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 65% 5%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 75% 55%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 85% 30%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 95% 85%, rgba(255,255,255,0.5), transparent);
+    background-size: 100vw 50vh;
+    background-repeat: repeat-y;
+    animation: starsFlow1 20s linear infinite;
+}
+
+/* Second star layer - Offset pattern */
+body::after {
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 30% 50%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 40% 20%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 50% 70%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 60% 45%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 70% 90%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(2px 2px at 80% 25%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 10% 80%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 20% 10%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 30% 75%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 40% 95%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 50% 35%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 60% 15%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 70% 65%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 80% 85%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 100% 20%, rgba(255,255,255,0.6), transparent);
+    background-size: 100vw 50vh;
+    background-repeat: repeat-y;
+    animation: starsFlow2 15s linear infinite;
+}
+
+@keyframes starsFlow1 {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50vh); }
+}
+
+@keyframes starsFlow2 {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50vh); }
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    animation: titleEntrance 1.5s ease-out;
+}
+
+@keyframes titleEntrance {
+    0% { 
+        opacity: 0; 
+        transform: translateY(-30px) scale(0.9); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+#pokemonTitle {
+    max-width: 300px;
+    height: auto;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 4px 8px rgba(255,215,0,0.5));
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+#pokemonTitle:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 6px 12px rgba(255,215,0,0.7));
+}
+
+.loginForm {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1em;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 40px;
+    min-width: 350px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: formEntrance 1.8s ease-out;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes formEntrance {
+    0% { 
+        opacity: 0; 
+        transform: translateY(50px) scale(0.9); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+.loginForm h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-shadow: 
+        2px 2px 0px #000,
+        0 0 15px rgba(255,255,255,0.6),
+        0 0 30px rgba(90,103,216,0.4);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.loginForm label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: #ffffff;
+    text-shadow: 1px 1px 0px #000;
+    letter-spacing: 1px;
+    align-self: flex-start;
+    margin-bottom: -10px;
+}
+
+.loginForm input[type="text"], 
+.loginForm input[type="password"] {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    padding: 12px 15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.loginForm input[type="text"]:focus, 
+.loginForm input[type="password"]:focus {
+    outline: none;
+    border-color: rgba(90, 103, 216, 0.6);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        0 0 15px rgba(90, 103, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.loginForm input[type="text"]::placeholder, 
+.loginForm input[type="password"]::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#submit {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #5A67D8, #4C51BF);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 
+        0 4px 15px rgba(90, 103, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-top: 10px;
+    min-width: 150px;
+}
+
+#submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+#submit:hover::before {
+    left: 100%;
+}
+
+#submit:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 8px 25px rgba(90, 103, 216, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    background: linear-gradient(45deg, #4C51BF, #3730A3);
+}
+
+#submit:active {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 
+        0 4px 15px rgba(90, 103, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .loginForm {
+        min-width: 280px;
+        padding: 30px 20px;
+    }
+    
+    .loginForm h1 {
+        font-size: 1.2rem;
+    }
+    
+    #pokemonTitle {
+        max-width: 250px;
+    }
+    
+    #submit {
+        font-size: 12px;
+        padding: 12px 24px;
+    }
 }
