@@ -1,4 +1,4 @@
-# Pokemon Battle
+# Pokémon Battle - CMSC433
 
 This project is a Pokémon Game for CMSC433 at UMBC. Follow the instructions below to set it up and run it locally.
 
@@ -100,30 +100,33 @@ pip freeze > requirements.txt
 * Start Apache Web Server and MySQL Database
 * Go to http://localhost/phpmyadmin/ in your browser
 
-### 6. Load the Database via ```createAll.sql```
-* Go back to the cloned repository and open the ***creatALL.SQL*** file
+### 6. Load the Database via `createAll.sql`
+* Go back to the cloned repository and open the `createAll.sql` file
 * Copy all the contents of the file
-* Paste the content into the SQL tab in the phpMyAdmin page
+* Paste the content into the SQL tab in the phpMyAdmin page and execute it
 
-### 7. Run the Flask Server
-Make sure your virtual environment is still active.
+### 7. Set Up the Database and Authentication Tables
+Run these setup scripts **ONLY ONCE** when first setting up the project:
 
-Run the database setup and user authentication setup (ONLY ONCE):
 ```bash
-python db_setup.py # Only Needs to be run ONCE as it loads the pokemon into the database
-python setup_auth.py # Only needs to be run ONCE
+python db_setup.py        # Loads Pokémon data from Excel into the database
+python setup_auth.py      # Creates user and collection tables
 ```
-Then run the app:
+
+### 8. Run the Flask Application
+Make sure your virtual environment is still active, then run:
+
 ```bash
-python proj3.py  # Run anytime you want to start the app locally
+python proj3.py
 ```
 
 You should see output like:
+```
 * Running on http://127.0.0.1:5000/
-
+```
 
 ### To Stop the Server
-Use Ctrl + C in the terminal.
+Use `Ctrl + C` in the terminal where the Flask app is running.
 
 ### Deactivate the Virtual Environment
 After you're done, run:
