@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, request, flash, redirect, url_for, session
 from pokemonGame import app, get_db_connection
-from pokemonGame.models import User
+from pokemonGame.models import User, UserPokemon, Pokemon
 import secrets
 import string
 
@@ -146,7 +146,59 @@ def viewcollection():
     if 'user_id' not in session:
         flash("Please log in to view your collection.", "warning")
         return redirect(url_for('login'))
-    return render_template('menu/viewcollection/viewcollection.html')
+    
+    # Get all Pokemon from database
+    all_pokemon = Pokemon.get_all_pokemon()
+    
+    # Get user's collected Pokemon
+    user_id = session['user_id']
+    collected_pokemon_ids = UserPokemon.get_user_collection(user_id)
+    
+    # Add collection status to each Pokemon
+    for pokemon in all_pokemon:
+        pokemon['collected'] = pokemon['id'] in collected_pokemon_ids
+        
+        # Fix malformed Pokemon names using the centralized method
+        pokemon['Name'] = Pokemon.clean_pokemon_name(pokemon['Name'])
+        
+        # Use high-quality still images instead of animated GIFs for better performance
+        pokemon['sprite_url'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['Num']}.png"
+        # Fallback to basic sprite if official artwork doesn't exist
+        pokemon['fallback_sprite'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon['Num']}.png"
+    
+    # Calculate collection statistics
+    total_pokemon = len(all_pokemon)
+    collected_count = len(collected_pokemon_ids)
+    collection_percentage = (collected_count / total_pokemon * 100) if total_pokemon > 0 else 0
+    
+    return render_template('menu/viewcollection/viewcollection.html', 
+                         pokemon_list=all_pokemon,
+                         total_pokemon=total_pokemon,
+                         collected_count=collected_count,
+                         collection_percentage=collection_percentage)
+
+@app.route('/toggle_pokemon/<int:pokemon_id>', methods=['POST'])
+def toggle_pokemon(pokemon_id):
+    """Toggle a Pokemon in the user's collection."""
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+    
+    user_id = session['user_id']
+    collected_pokemon_ids = UserPokemon.get_user_collection(user_id)
+    
+    if pokemon_id in collected_pokemon_ids:
+        # Remove from collection
+        success = UserPokemon.remove_pokemon_from_collection(user_id, pokemon_id)
+        action = 'removed'
+    else:
+        # Add to collection
+        success = UserPokemon.add_pokemon_to_collection(user_id, pokemon_id)
+        action = 'added'
+    
+    if success:
+        return jsonify({'success': True, 'action': action})
+    else:
+        return jsonify({'error': 'Database operation failed'}), 500
 
 @app.route('/api/pokemon', methods=['GET'])
 def get_pokemon_api():
@@ -156,4 +208,10 @@ def get_pokemon_api():
     pokemon_data = cursor.fetchall()
     cursor.close()
     conn.close()
+    
+    # Clean Pokemon names before returning
+    for pokemon in pokemon_data:
+        if 'Name' in pokemon:
+            pokemon['Name'] = Pokemon.clean_pokemon_name(pokemon['Name'])
+    
     return jsonify(pokemon_data)
