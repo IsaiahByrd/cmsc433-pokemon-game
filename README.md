@@ -1,17 +1,13 @@
-<p align="left" style="display: flex; align-items: center;">
-  <strong>Pokémon Battle</strong>
-    <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif" alt="Charizard"
-        width="25"
-        height="25">
-</p>
+# Pokémon Battle - CMSC433
 
-
-This project is a Pokémon Game for CMSC433. Follow the instructions below to set it up and run it locally.
+This project is a Pokémon Game for CMSC433 at UMBC. Follow the instructions below to set it up and run it locally.
 
 ## Requirements
 
 - Python 3.7+
 - Git (to clone the repo)
+- XAMPP (for MariaDB + phpMyAdmin)
+- MariaDB Connector/C (for installing the `mariadb` Python package)
 
 ---
 
@@ -40,7 +36,53 @@ source venv/bin/activate
 
 You should now see (venv) in your terminal prompt.
 
-### 3. Install Dependencies
+### 3. Install MariaDB Connector/C (Required for Python ```mariadb```)
+This step is required before running ``` pip install```.
+- **macOs** (using Homebrew):
+  ```bash
+  brew install mariadb-connector-c
+  ```
+  Check if ```mariadb_config``` is installed
+  ```bash
+  which mariadb_config
+  ```
+  If you get this error after installing:
+
+  ```mariadb_config not found```
+
+  It's likely the tool is not on your system’s PATH. Run the following to fix it:
+  ```bash
+  echo 'export PATH="/opt/homebrew/opt/mariadb-connector-c/bin:$PATH"' >> ~/.zshrc
+  source ~/.zshrc
+  ```
+
+  Then check again:
+  ```bash
+  which mariadb_config
+  mariadb_config --version
+  ```
+
+  You should now see the path to mariadb_config and a version number.
+
+
+
+- **Ubuntu/Debian:**
+  ```bash
+  sudo apt update
+  sudo apt install libmariadb-dev
+  ```
+- **Windows:**
+
+  **1.** Download [MariaDB Connector/C](https://mariadb.com/downloads/connectors/).
+
+  **2.** Install it and make sure the path to ```mariadb_config``` is added to your environment variables.
+
+  To confirm it's installed:
+  ```bash
+  which mariadb_config  # or `mariadb_config --version`
+  ```
+
+### 4. Install Python Dependencies
 Make sure you're in the project root (same level as requirements.txt), then run:
 ```bash
 pip install -r requirements.txt
@@ -51,32 +93,40 @@ If you don't have a requirements.txt yet, generate it with:
 pip freeze > requirements.txt
 ```
 
-### 4. Instal XAMPP
-* Follow the link to download xampp https://www.apachefriends.org/download.html
-* On XAMPP Control Panel Start APACHE and Start MySQL
-* Press Admin to the right of the start button for MySql in order to get to the phpMyAdmin page
-* Click the SQL tab to the left of Status
+### 5. Install XAMPP
+* Download XAMPP: https://www.apachefriends.org/download.html
+* Launch the XAMPP Control Panel
+* Go to the Manage Servers tab
+* Start Apache Web Server and MySQL Database
+* Go to http://localhost/phpmyadmin/ in your browser
 
-### 5. Run the createAll.sql file
-* Go back to the cloned repository and open the ***creatALL.SQL*** file
+### 6. Load the Database via `createAll.sql`
+* Go back to the cloned repository and open the `createAll.sql` file
 * Copy all the contents of the file
-* Paste the content into the SQL tab in the phpMyAdmin page
-* Click ***GO***
+* Paste the content into the SQL tab in the phpMyAdmin page and execute it
 
-### 5. Run the Flask Server
-Make sure your environment is activated, then run:
+### 7. Set Up the Database and Authentication Tables
+Run these setup scripts **ONLY ONCE** when first setting up the project:
 
 ```bash
-python db_setup.py # Only Needs to be run ONCE as it loads the pokemon into the database
-python proj3.py  # Run Anytime you want to start the app locally
+python db_setup.py        # Loads Pokémon data from Excel into the database
+python setup_auth.py      # Creates user and collection tables
+```
+
+### 8. Run the Flask Application
+Make sure your virtual environment is still active, then run:
+
+```bash
+python proj3.py
 ```
 
 You should see output like:
+```
 * Running on http://127.0.0.1:5000/
-
+```
 
 ### To Stop the Server
-Use Ctrl + C in the terminal.
+Use `Ctrl + C` in the terminal where the Flask app is running.
 
 ### Deactivate the Virtual Environment
 After you're done, run:

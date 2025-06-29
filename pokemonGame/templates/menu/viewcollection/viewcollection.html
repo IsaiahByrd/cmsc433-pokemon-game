@@ -3,9 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collection</title>
+    <title>Pokémon Collection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='viewcollection.css') }}">
 </head>
 <body>
-    <h1>This is where players will view the pokemon they've collected</h1>
+    <a href="{{ url_for('menu') }}" class="back-button">← Back to Menu</a>
+    
+    <div class="collection-container">
+        <div class="collection-header">
+            <h1 class="collection-title">Pokémon Collection</h1>
+            <div class="collection-stats">
+                {{ collected_count }} / {{ total_pokemon }} Collected 
+                ({{ "%.1f"|format(collection_percentage) }}%)
+            </div>
+        </div>
+        
+        <div class="filter-controls">
+            <button class="filter-button active" data-filter="all">All Pokemon</button>
+            <button class="filter-button" data-filter="collected">Collected Only</button>
+            <button class="filter-button" data-filter="uncollected">Not Collected</button>
+            <button class="filter-button" data-filter="legendary">Legendary</button>
+        </div>
+        
+        <div class="pokemon-grid" id="pokemonGrid">
+            {% for pokemon in pokemon_list %}
+            <div class="pokemon-card {{ 'collected' if pokemon.collected else 'uncollected' }}" 
+                 data-pokemon-id="{{ pokemon.id }}"
+                 data-collected="{{ 'true' if pokemon.collected else 'false' }}"
+                 data-legendary="{{ 'true' if pokemon.Legendary else 'false' }}">
+                
+                {% if pokemon.collected %}
+                <div class="collected-badge"></div>
+                {% endif %}
+                
+                <div class="pokemon-number">#{{ "%03d"|format(pokemon.Num) }}</div>
+                
+                <img src="{{ pokemon.sprite_url }}" 
+                     alt="{{ pokemon.Name }}" 
+                     class="pokemon-sprite"
+                     loading="lazy"
+                     decoding="async"
+                     onerror="this.onerror=null; this.src='{{ pokemon.fallback_sprite }}'; if(this.onerror) this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png';"
+                     onload="this.style.opacity='1';"
+                     style="opacity: 0; transition: opacity 0.3s ease;">
+                
+                <div class="pokemon-name">{{ pokemon.Name }}</div>
+                
+                <div class="pokemon-types">
+                    <span class="type-badge type-{{ pokemon.Type1.lower() }}">{{ pokemon.Type1 }}</span>
+                    {% if pokemon.Type2 %}
+                    <span class="type-badge type-{{ pokemon.Type2.lower() }}">{{ pokemon.Type2 }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="pokemon-stats">
+                    Total: {{ pokemon.Total }}
+                    {% if pokemon.Legendary %}
+                    <br>★ Legendary ★
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const pokemonCards = document.querySelectorAll('.pokemon-card');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const filter = button.dataset.filter;
+                
+                pokemonCards.forEach(card => {
+                    const isCollected = card.dataset.collected === 'true';
+                    const isLegendary = card.dataset.legendary === 'true';
+                    let show = false;
+                    
+                    switch(filter) {
+                        case 'all':
+                            show = true;
+                            break;
+                        case 'collected':
+                            show = isCollected;
+                            break;
+                        case 'uncollected':
+                            show = !isCollected;
+                            break;
+                        case 'legendary':
+                            show = isLegendary;
+                            break;
+                    }
+                    
+                    card.style.display = show ? 'block' : 'none';
+                });
+                
+                // Update grid layout after filtering
+                updateGridLayout();
+            });
+        });
+        
+        function updateGridLayout() {
+            // Force grid to recalculate after filtering
+            const grid = document.getElementById('pokemonGrid');
+            grid.style.display = 'none';
+            grid.offsetHeight; // Trigger reflow
+            grid.style.display = 'grid';
+        }
+        
+        // Add some visual flair - animate cards on load with performance optimization
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.pokemon-card');
+            
+            // Use Intersection Observer for better performance
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '0';
+                            entry.target.style.transform = 'translateY(20px)';
+                            entry.target.style.transition = 'all 0.3s ease';
+                            
+                            requestAnimationFrame(() => {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            });
+                        }, index * 10); // Reduced delay for faster loading
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => observer.observe(card));
+        });
+        
+        // Optimize image loading
+        document.addEventListener('DOMContentLoaded', () => {
+            // Preload visible images only
+            const sprites = document.querySelectorAll('.pokemon-sprite');
+            sprites.forEach(sprite => {
+                // Add smooth fade-in when image loads
+                sprite.addEventListener('load', () => {
+                    sprite.style.opacity = '1';
+                });
+                
+                // Optimize error handling
+                sprite.addEventListener('error', function() {
+                    this.style.opacity = '1'; // Still show something even if fallback fails
+                });
+            });
+        });
+    </script>
 </body>
 </html>

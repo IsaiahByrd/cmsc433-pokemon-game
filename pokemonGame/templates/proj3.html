@@ -10,12 +10,21 @@
 </head>
 <body>
     <div class="account">
-        <a href="{{ url_for('login') }}">
-            <button type="button">Login</button>
-        </a>
-        <a href="{{ url_for('register') }}">
-            <button type="button">Register</button>
-        </a>
+        {% if session.username %}
+            <div class="user-info">
+                <span class="welcome-text">Welcome, {{ session.username }}!</span>
+                <a href="{{ url_for('logout') }}">
+                    <button id="logoutButton" type="button">Logout</button>
+                </a>
+            </div>
+        {% else %}
+            <a href="{{ url_for('login') }}">
+                <button id="loginButton" type="button">Login</button>
+            </a>
+            <a href="{{ url_for('register') }}">
+                <button id="registerButton" type="button">Register</button>
+            </a>
+        {% endif %}
     </div>
 
     <div id="title">    
