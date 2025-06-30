@@ -204,7 +204,8 @@ def toggle_pokemon(pokemon_id):
 def get_pokemon_api():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM pokemon ORDER BY id")
+    # Only get Pokemon from first 3 generations (Gen 1-3, Num 1-386)
+    cursor.execute("SELECT * FROM pokemon WHERE Generation <= 3 ORDER BY id")
     pokemon_data = cursor.fetchall()
     cursor.close()
     conn.close()
