@@ -3,6 +3,7 @@ from pokemonGame import app, get_db_connection
 from pokemonGame.models import User, UserPokemon, Pokemon
 import secrets
 import string
+import random
 
 def generate_random_username():
     """Generate a random username with prefix 'Trainer' and random suffix."""
@@ -157,6 +158,11 @@ def viewcollection():
         flash("Please log in to view your collection.", "warning")
         return redirect(url_for('login'))
     
+    # Get pagination parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = 50  # 50 Pokemon per page
+    filter_type = request.args.get('filter', 'all')
+    
     # Get all Pokemon from database
     all_pokemon = Pokemon.get_all_pokemon()
     
@@ -171,21 +177,50 @@ def viewcollection():
         # Fix malformed Pokemon names using the centralized method
         pokemon['Name'] = Pokemon.clean_pokemon_name(pokemon['Name'])
         
-        # Use high-quality still images instead of animated GIFs for better performance
-        pokemon['sprite_url'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['Num']}.png"
-        # Fallback to basic sprite if official artwork doesn't exist
-        pokemon['fallback_sprite'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon['Num']}.png"
+        # Use pixelated sprites for retro aesthetic and better performance
+        pokemon['sprite_url'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon['Num']}.png"
+        # Fallback to front_default sprite if numbered sprite doesn't exist
+        pokemon['fallback_sprite'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/front_default/{pokemon['Num']}.png"
     
-    # Calculate collection statistics
+    # Apply filter
+    filtered_pokemon = []
+    if filter_type == 'collected':
+        filtered_pokemon = [p for p in all_pokemon if p['collected']]
+    elif filter_type == 'uncollected':
+        filtered_pokemon = [p for p in all_pokemon if not p['collected']]
+    elif filter_type == 'legendary':
+        filtered_pokemon = [p for p in all_pokemon if p['Legendary']]
+    else:  # 'all'
+        filtered_pokemon = all_pokemon
+    
+    # Calculate pagination
+    total_filtered = len(filtered_pokemon)
+    total_pages = (total_filtered + per_page - 1) // per_page  # Ceiling division
+    
+    # Ensure page is within bounds
+    page = max(1, min(page, total_pages if total_pages > 0 else 1))
+    
+    # Get Pokemon for current page
+    start_idx = (page - 1) * per_page
+    end_idx = start_idx + per_page
+    pokemon_page = filtered_pokemon[start_idx:end_idx]
+    
+    # Calculate collection statistics (for all Pokemon, not just filtered)
     total_pokemon = len(all_pokemon)
     collected_count = len(collected_pokemon_ids)
     collection_percentage = (collected_count / total_pokemon * 100) if total_pokemon > 0 else 0
     
     return render_template('menu/viewcollection/viewcollection.html', 
-                         pokemon_list=all_pokemon,
+                         pokemon_list=pokemon_page,
                          total_pokemon=total_pokemon,
                          collected_count=collected_count,
-                         collection_percentage=collection_percentage)
+                         collection_percentage=collection_percentage,
+                         current_page=page,
+                         total_pages=total_pages,
+                         has_prev=page > 1,
+                         has_next=page < total_pages,
+                         filter_type=filter_type,
+                         total_filtered=total_filtered)
 
 @app.route('/toggle_pokemon/<int:pokemon_id>', methods=['POST'])
 def toggle_pokemon(pokemon_id):
@@ -214,7 +249,8 @@ def toggle_pokemon(pokemon_id):
 def get_pokemon_api():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM pokemon ORDER BY id")
+    # Only get Pokemon from first 3 generations (Gen 1-3, Num 1-386)
+    cursor.execute("SELECT * FROM pokemon WHERE Generation <= 3 ORDER BY id")
     pokemon_data = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -240,3 +276,62 @@ def choose_starter():
     # Show all starter Pokémon (you can filter by generation/types if you want)
     all_pokemon = Pokemon.get_all_pokemon()
     return render_template('choose_starter.html', pokemon_list=all_pokemon)
+#catch route
+@app.route('/catch/<int:pokemon_id>', methods=['POST'])
+def catch_pokemon(pokemon_id):
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+
+    user_id = session['user_id']
+    success = UserPokemon.add_pokemon_to_collection(user_id, pokemon_id)
+
+    if success:
+        return jsonify({'success': True})
+    else:
+        return jsonify({'error': 'Database operation failed'}), 500
+    
+
+@app.route('/get_opponent')
+def get_opponent():
+    import random
+    all_pokemon = Pokemon.get_all_pokemon()
+    opponent = random.choice(all_pokemon)
+
+    return jsonify({
+        'id': opponent['id'],
+        'name': opponent['Name'],
+        'hp': opponent['HP'],
+        'attack': opponent['Attack'],
+        'sprite': f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{opponent['Num']}.png"
+    })
+
+
+@app.route('/api/random_pokemon')
+def random_pokemon():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        # Find min and max ID range
+        cursor.execute("SELECT MIN(id) AS min_id, MAX(id) AS max_id FROM pokemon")
+        result = cursor.fetchone()
+        min_id = result['min_id']
+        max_id = result['max_id']
+
+        # Pick a random ID and fetch it (loop in case of gaps)
+        while True:
+            random_id = random.randint(min_id, max_id)
+            cursor.execute("SELECT * FROM pokemon WHERE id = %s", (random_id,))
+            pokemon = cursor.fetchone()
+            if pokemon:
+                # Optional: clean name and add sprite
+                pokemon['Name'] = Pokemon.clean_pokemon_name(pokemon['Name'])
+                pokemon['sprite'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon['Num']}.png"
+                return jsonify(pokemon)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'DB error'}), 500
+    finally:
+        cursor.close()
+        conn.close()

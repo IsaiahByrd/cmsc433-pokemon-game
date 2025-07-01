@@ -208,14 +208,20 @@ body::after {
     margin: 0 auto 15px;
     display: block;
     object-fit: contain;
+    /* Optimize for pixelated sprites */
+    image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
-    transition: all 0.3s ease;
+    image-rendering: pixelated;
+    transition: opacity 0.2s ease;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    /* Better performance for pixelated sprites */
+    transform: translateZ(0);
+    will-change: opacity;
 }
 
 .pokemon-card.uncollected .pokemon-sprite {
@@ -315,6 +321,143 @@ body::after {
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
+/* Page info styling */
+.page-info {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 1px 1px 0px #000;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Pagination controls */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.pagination-button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 12px 20px;
+    background: linear-gradient(45deg, #8B5CF6, #7C3AED);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 
+        0 3px 12px rgba(139, 92, 246, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.pagination-button:hover:not(.disabled) {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 6px 20px rgba(139, 92, 246, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.pagination-button.disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0 15px;
+}
+
+.page-number {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 30px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+}
+
+.page-number:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+.page-number.current {
+    background: linear-gradient(45deg, #50C878, #3A9B5C);
+    border-color: #50C878;
+    box-shadow: 0 2px 8px rgba(80, 200, 120, 0.4);
+    cursor: default;
+    transform: none;
+}
+
+.page-ellipsis {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 0 5px;
+    text-shadow: 1px 1px 0px #000;
+}
+
+/* Filter buttons as links */
+.filter-controls .filter-button {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.filter-controls .filter-button:visited {
+    color: white;
+}
+
+/* Toast notifications */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    pointer-events: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.toast-success {
+    background: linear-gradient(45deg, #50C878, #3A9B5C);
+    color: white;
+    border: 1px solid rgba(80, 200, 120, 0.5);
+}
+
+.toast-error {
+    background: linear-gradient(45deg, #ff4444, #cc3333);
+    color: white;
+    border: 1px solid rgba(255, 68, 68, 0.5);
+}
+
 /* Pokemon type colors */
 .type-normal { background-color: #A8A878; }
 .type-fire { background-color: #F08030; }
@@ -354,6 +497,38 @@ body::after {
         font-size: 10px;
         padding: 10px 15px;
     }
+    
+    /* Pagination responsive */
+    .pagination-controls {
+        gap: 8px;
+        margin: 20px 0;
+    }
+    
+    .pagination-button {
+        font-size: 8px;
+        padding: 10px 15px;
+    }
+    
+    .page-number {
+        font-size: 8px;
+        padding: 6px 10px;
+        min-width: 25px;
+    }
+    
+    .page-numbers {
+        margin: 0 10px;
+        gap: 3px;
+    }
+    
+    .page-info {
+        font-size: 8px;
+        margin-top: 8px;
+    }
+    
+    .page-ellipsis {
+        font-size: 8px;
+        padding: 0 3px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -379,4 +554,87 @@ body::after {
         font-size: 7px;
         padding: 3px 6px;
     }
+    
+    /* Mobile pagination */
+    .pagination-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .page-numbers {
+        margin: 0;
+        order: -1;
+    }
+    
+    .pagination-button {
+        min-width: 120px;
+        text-align: center;
+    }
+    
+    .page-info {
+        font-size: 7px;
+        line-height: 1.4;
+    }
+    
+    .collection-stats {
+        font-size: 10px;
+        line-height: 1.4;
+    }
+}
+
+/* Performance optimizations */
+.pagination-controls,
+.page-numbers {
+    contain: layout style;
+}
+
+.pagination-button,
+.page-number {
+    contain: layout style paint;
+    will-change: transform, box-shadow;
+}
+
+/* Accessibility improvements */
+.pagination-button:focus,
+.page-number:focus {
+    outline: 2px solid #50C878;
+    outline-offset: 2px;
+}
+
+.filter-button:focus {
+    outline: 2px solid #50C878;
+    outline-offset: 2px;
+}
+
+/* Collection toggle animations */
+.collected-badge {
+    transition: all 0.3s ease;
+    transform: scale(0);
+}
+
+.pokemon-card.collected .collected-badge {
+    transform: scale(1);
+}
+
+.pokemon-card {
+    transition: all 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
+}
+
+/* Loading states */
+.pokemon-card.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.pokemon-card.loading .pokemon-sprite {
+    filter: blur(2px);
+}
+
+.pokemon-grid {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.pokemon-grid.loading {
+    opacity: 0.7;
 }

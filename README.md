@@ -36,9 +36,10 @@ source venv/bin/activate
 
 You should now see (venv) in your terminal prompt.
 
-### 3. Install MariaDB Connector/C (Required for Python ```mariadb```)
-This step is required before running ``` pip install```.
-- **macOs** (using Homebrew):
+## **ONLY DO STEP 3 IF YOU ARE ON A MacOS OR Linux SYSTEM, OTHERWISE, CONTINUE TO STEP 4**
+### 3. Install MariaDB Connector/C **(REQUIRED FOR MacOS & Linux ONLY)**
+This step is required before running ``` pip install -r requirements.txt```.
+- **MacOs** (using Homebrew):
   ```bash
   brew install mariadb-connector-c
   ```
@@ -64,22 +65,10 @@ This step is required before running ``` pip install```.
 
   You should now see the path to mariadb_config and a version number.
 
-
-
 - **Ubuntu/Debian:**
   ```bash
   sudo apt update
   sudo apt install libmariadb-dev
-  ```
-- **Windows:**
-
-  **1.** Download [MariaDB Connector/C](https://mariadb.com/downloads/connectors/).
-
-  **2.** Install it and make sure the path to ```mariadb_config``` is added to your environment variables.
-
-  To confirm it's installed:
-  ```bash
-  which mariadb_config  # or `mariadb_config --version`
   ```
 
 ### 4. Install Python Dependencies

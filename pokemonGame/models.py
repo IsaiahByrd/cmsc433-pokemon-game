@@ -163,14 +163,15 @@ class Pokemon:
     
     @staticmethod
     def get_all_pokemon():
-        """Get all Pokemon from the database."""
+        """Get all Pokemon from the database (first 3 generations only)."""
         conn = get_db_connection()
         if not conn:
             return []
         
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM pokemon ORDER BY Num")
+            # Only get Pokemon from first 3 generations (Gen 1-3, Num 1-386)
+            cursor.execute("SELECT * FROM pokemon WHERE Generation <= 3 ORDER BY Num")
             pokemon_data = cursor.fetchall()
             return pokemon_data
         except mariadb.Error as e:
