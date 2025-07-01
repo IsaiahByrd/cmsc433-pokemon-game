@@ -37,9 +37,13 @@
     </div>
 
     <br><br><br>
-
-    <a href="{{ url_for('menu') }}">
-        <button id="playButton" type="button">Play Now</button>
+    {% if session.username %}
+        <a href="{{ url_for('menu') }}">
+            <button id="playButton" type="button">Play Now</button>
+        </a>
+    {% else %}
+        <button id="playButton" type="button" disabled title="Please log in to play">Log In To Play Now</button>
+    {% endif %}
     </a>
 </body>
 </html>

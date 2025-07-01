@@ -179,6 +179,24 @@ class Pokemon:
         finally:
             cursor.close()
             conn.close()
+
+    @staticmethod
+    def get_all__starters():
+        conn = get_db_connection()
+        if not conn:
+            return []
+        
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute("SELECT * FROM pokemon WHERE starter=1 GROUP BY Generation ORDER BY Num ")
+            starter_data = cursor.fetchall()
+            return starter_data
+        except mariadb.Error as e:
+            print(f"Error getting Pokemon data: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
     
     @staticmethod
     def get_pokemon_by_id(pokemon_id):

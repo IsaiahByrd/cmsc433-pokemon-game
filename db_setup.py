@@ -28,10 +28,15 @@ def initialize_db(excel_file_path):
         df = pd.read_excel(excel_file_path)
         df['Type 2'] = df['Type 2'].where(pd.notna(df['Type 2']), None) #handle empty
 
+        # set of all the starter pokemon id
+        starter_set = {1, 4, 7, 25, 152, 155, 158, 252, 255, 258, 387, 390, 393, 495, 498, 501, 650, 653, 656}
+        df['Starter'] = False
+        df.loc[df['#'].isin(starter_set), 'Starter'] = True
+
         # create a query template that will be used in a loop to insert all pokemon to database
         sql_insert_query = """
-            INSERT INTO pokemon(Num, Name, Type1, Type2, Total, HP, Attack, Defense, SpAttack, SpDefense, Speed, Generation, Legendary)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO pokemon(Num, Name, Type1, Type2, Total, HP, Attack, Defense, SpAttack, SpDefense, Speed, Generation, Legendary, Starter)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
         # make the list of tuples from the excel data

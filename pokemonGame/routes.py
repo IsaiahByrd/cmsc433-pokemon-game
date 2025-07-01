@@ -41,6 +41,12 @@ def login():
             # Login successful
             session['user_id'] = user.id
             session['username'] = user.username
+
+             # Check if user has any collected Pokémon
+            if not UserPokemon.get_user_collection(user.id):
+                return redirect(url_for('choose_starter'))
+            
+
             flash(f"Welcome back, {username}!", "success")
             return redirect(url_for('menu'))
         else:
@@ -108,6 +114,9 @@ def register():
                 flash(f"Account created! Your username is '{username}' and your password is '{password}'. Please save these credentials!", "info")
             else:
                 flash(f"Registration successful! Welcome, {username}!", "success")
+
+            if not UserPokemon.get_user_collection(user.id):
+                return redirect(url_for('choose_starter'))
             
             return redirect(url_for('menu'))
         else:
@@ -216,3 +225,18 @@ def get_pokemon_api():
             pokemon['Name'] = Pokemon.clean_pokemon_name(pokemon['Name'])
     
     return jsonify(pokemon_data)
+
+@app.route('/choose_starter', methods=['GET', 'POST'])
+def choose_starter():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        pokemon_id = int(request.form['pokemon_id'])
+        UserPokemon.add_pokemon_to_collection(session['user_id'], pokemon_id)
+        flash("Starter Pokémon chosen! Good luck!", "success")
+        return redirect(url_for('menu'))
+
+    # Show all starter Pokémon (you can filter by generation/types if you want)
+    all_pokemon = Pokemon.get_all_pokemon()
+    return render_template('choose_starter.html', pokemon_list=all_pokemon)
