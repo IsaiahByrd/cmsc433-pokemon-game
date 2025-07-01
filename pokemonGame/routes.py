@@ -147,6 +147,11 @@ def viewcollection():
         flash("Please log in to view your collection.", "warning")
         return redirect(url_for('login'))
     
+    # Get pagination parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = 50  # 50 Pokemon per page
+    filter_type = request.args.get('filter', 'all')
+    
     # Get all Pokemon from database
     all_pokemon = Pokemon.get_all_pokemon()
     
@@ -166,16 +171,45 @@ def viewcollection():
         # Fallback to front_default sprite if numbered sprite doesn't exist
         pokemon['fallback_sprite'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/front_default/{pokemon['Num']}.png"
     
-    # Calculate collection statistics
+    # Apply filter
+    filtered_pokemon = []
+    if filter_type == 'collected':
+        filtered_pokemon = [p for p in all_pokemon if p['collected']]
+    elif filter_type == 'uncollected':
+        filtered_pokemon = [p for p in all_pokemon if not p['collected']]
+    elif filter_type == 'legendary':
+        filtered_pokemon = [p for p in all_pokemon if p['Legendary']]
+    else:  # 'all'
+        filtered_pokemon = all_pokemon
+    
+    # Calculate pagination
+    total_filtered = len(filtered_pokemon)
+    total_pages = (total_filtered + per_page - 1) // per_page  # Ceiling division
+    
+    # Ensure page is within bounds
+    page = max(1, min(page, total_pages if total_pages > 0 else 1))
+    
+    # Get Pokemon for current page
+    start_idx = (page - 1) * per_page
+    end_idx = start_idx + per_page
+    pokemon_page = filtered_pokemon[start_idx:end_idx]
+    
+    # Calculate collection statistics (for all Pokemon, not just filtered)
     total_pokemon = len(all_pokemon)
     collected_count = len(collected_pokemon_ids)
     collection_percentage = (collected_count / total_pokemon * 100) if total_pokemon > 0 else 0
     
     return render_template('menu/viewcollection/viewcollection.html', 
-                         pokemon_list=all_pokemon,
+                         pokemon_list=pokemon_page,
                          total_pokemon=total_pokemon,
                          collected_count=collected_count,
-                         collection_percentage=collection_percentage)
+                         collection_percentage=collection_percentage,
+                         current_page=page,
+                         total_pages=total_pages,
+                         has_prev=page > 1,
+                         has_next=page < total_pages,
+                         filter_type=filter_type,
+                         total_filtered=total_filtered)
 
 @app.route('/toggle_pokemon/<int:pokemon_id>', methods=['POST'])
 def toggle_pokemon(pokemon_id):
