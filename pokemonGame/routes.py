@@ -3,6 +3,7 @@ from pokemonGame import app, get_db_connection
 from pokemonGame.models import User, UserPokemon, Pokemon
 import secrets
 import string
+import random
 
 def generate_random_username():
     """Generate a random username with prefix 'Trainer' and random suffix."""
@@ -250,3 +251,63 @@ def get_pokemon_api():
             pokemon['Name'] = Pokemon.clean_pokemon_name(pokemon['Name'])
     
     return jsonify(pokemon_data)
+
+#catch route
+@app.route('/catch/<int:pokemon_id>', methods=['POST'])
+def catch_pokemon(pokemon_id):
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+
+    user_id = session['user_id']
+    success = UserPokemon.add_pokemon_to_collection(user_id, pokemon_id)
+
+    if success:
+        return jsonify({'success': True})
+    else:
+        return jsonify({'error': 'Database operation failed'}), 500
+    
+
+@app.route('/get_opponent')
+def get_opponent():
+    import random
+    all_pokemon = Pokemon.get_all_pokemon()
+    opponent = random.choice(all_pokemon)
+
+    return jsonify({
+        'id': opponent['id'],
+        'name': opponent['Name'],
+        'hp': opponent['HP'],
+        'attack': opponent['Attack'],
+        'sprite': f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{opponent['Num']}.png"
+    })
+
+
+@app.route('/api/random_pokemon')
+def random_pokemon():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        # Find min and max ID range
+        cursor.execute("SELECT MIN(id) AS min_id, MAX(id) AS max_id FROM pokemon")
+        result = cursor.fetchone()
+        min_id = result['min_id']
+        max_id = result['max_id']
+
+        # Pick a random ID and fetch it (loop in case of gaps)
+        while True:
+            random_id = random.randint(min_id, max_id)
+            cursor.execute("SELECT * FROM pokemon WHERE id = %s", (random_id,))
+            pokemon = cursor.fetchone()
+            if pokemon:
+                # Optional: clean name and add sprite
+                pokemon['Name'] = Pokemon.clean_pokemon_name(pokemon['Name'])
+                pokemon['sprite'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon['Num']}.png"
+                return jsonify(pokemon)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'DB error'}), 500
+    finally:
+        cursor.close()
+        conn.close()

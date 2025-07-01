@@ -2,10 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battle!</title>
+    <title>Pokémon Battle</title>
 </head>
 <body>
-    <h1>This is where players will battle other pokemon</h1>
+    <h1>Pokémon Battle</h1>
+
+    <h2>Your Pokémon</h2>
+    <div>
+        <div>Name: Pikachu</div>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" width="100">
+        <div id="pikachu-hp">HP: 100</div>
+    </div>
+
+    <h2>Opponent Pokémon</h2>
+    <div>
+        <div id="opponent-name">Loading...</div>
+        <img id="opponent-sprite" src="" width="100">
+        <div id="opponent-hp">HP: ...</div>
+    </div>
+
+    <div>
+        <button id="attack-btn">Attack</button>
+        <button id="catch-btn">Catch</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='battle.js') }}"></script>
 </body>
 </html>
