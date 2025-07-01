@@ -3,29 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Pokémon Battle</title>
+    <script src="{{ url_for('static', filename='battle.js') }}" async></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='battle.css') }}">
 </head>
 <body>
-    <h1>Pokémon Battle</h1>
+    <div class="battlefield">
+        <img class="battleBackground" src="{{ url_for('static', filename='battle-background.gif')}}">
 
-    <h2>Your Pokémon</h2>
-    <div>
-        <div>Name: Pikachu</div>
-        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" width="100">
-        <div id="pikachu-hp">HP: 100</div>
+        <div class="pokemon-container-friendly">
+            <div class="pokemon-info">
+                <span class="pokemon-name">Loading...</span>
+                <span class="friendly-hp"></span>
+                <div id="health-info">HP: NA/NA
+                    <div class="health-bar">
+                        <div class="health"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <img class="friendlyPokemon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png">
+
+        <div class="pokemon-container-opponent">
+            <div class="pokemon-info">
+                <span class="pokemon-name" id="opponent-pokemon-name">Loading...</span>
+                <span class="hp" id="opponent-hp"></span>
+                <div id="health-info">HP: NA/NA
+                    <div class="health-bar">
+                        <div class="opponent-health"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <img class="opponentPokemon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png">
+        
     </div>
 
-    <h2>Opponent Pokémon</h2>
-    <div>
-        <div id="opponent-name">Loading...</div>
-        <img id="opponent-sprite" src="" width="100">
-        <div id="opponent-hp">HP: ...</div>
-    </div>
 
     <div>
         <button id="attack-btn">Attack</button>
         <button id="catch-btn">Catch</button>
     </div>
-
-    <script src="{{ url_for('static', filename='battle.js') }}"></script>
 </body>
 </html>

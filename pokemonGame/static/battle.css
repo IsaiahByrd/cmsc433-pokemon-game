@@ -1,0 +1,55 @@
+.battlefield{
+    position: relative;
+    width: 1360px;
+    height:  766px;
+    overflow: hidden;
+}
+
+.battleBackground{
+    width: 100%;
+    height: 100%;
+}
+.friendlyPokemon{
+    position: absolute;
+    bottom: 150px;
+    left: 415px;
+    transform: scaleX(-1);
+}
+.opponentPokemon{
+    position: absolute;
+    top: 325px;
+    right: 375px;
+}
+
+.health-bar{
+    width: 150px;
+    height: 12px;
+    background: rgb(198, 198, 198);
+    border-radius: 7px;
+}
+
+.pokemon-container-friendly{
+    position: absolute;
+    bottom: 225px;
+    right: 450px;
+}
+.pokemon-info{
+    position: absolute;
+
+    padding: 50px 100px;
+    background: rgb(123, 123, 123);
+    border-radius: 10px;
+}
+.pokemon-name{
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.pokemon-container-opponent{
+    position: absolute;
+    top: 100px;
+    left: 100px;
+}
