@@ -157,6 +157,31 @@ class UserPokemon:
         finally:
             cursor.close()
             conn.close()
+    
+    # In UserPokemon or a new UserTeam class
+    @staticmethod
+    def save_team(user_id, team_ids):
+        conn = get_db_connection()
+        if not conn:
+            return False, "DB error"
+        cursor = conn.cursor()
+        try:
+            # Remove old team
+            cursor.execute("DELETE FROM user_pokemon WHERE user_id = ? and slot IS NOT NULL", (user_id,))
+            # Insert new team
+            for slot, pid in enumerate(team_ids, 1):
+                cursor.execute(
+                    "INSERT INTO user_pokemon (user_id, pokemon_id, slot) VALUES (?, ?, ?)",
+                    (user_id, pid, slot)
+                )
+            conn.commit()
+            return True, "Team saved"
+        except Exception as e:
+            conn.rollback()
+            return False, str(e)
+        finally:
+            cursor.close()
+            conn.close()
 
 class Pokemon:
     """Model for Pokemon data."""

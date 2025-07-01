@@ -4,8 +4,306 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='viewcollection.css') }}">
+    <style>
+        .team-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        .team-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #000, 0 0 15px #5A67D8;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .pokemon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 24px;
+            justify-items: center;
+        }
+        .pokemon-card {
+            background: rgba(44, 62, 80, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(90, 103, 216, 0.3);
+            padding: 18px 10px 10px 10px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        .pokemon-card.selected {
+            border: 3px solid #50C878;
+            box-shadow: 0 0 20px #50C878;
+        }
+        .pokemon-sprite {
+            width: 96px;
+            height: 96px;
+            image-rendering: pixelated;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+        .pokemon-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 13px;
+            color: #fff;
+            text-shadow: 1px 1px 0px #000;
+            margin-bottom: 8px;
+        }
+        .team-bar {
+            margin: 30px 0 20px 0;
+            padding: 18px;
+            background: rgba(80, 200, 120, 0.15);
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            align-items: center;
+            justify-content: center;
+        }
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .team-member img {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 4px;
+        }
+        .remove-btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 8px;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+        .collect-more-btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 13px;
+            padding: 10px 24px;
+            background: linear-gradient(45deg, #8B5CF6, #7C3AED);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            margin: 30px auto 0 auto;
+            display: block;
+            box-shadow: 0 3px 12px rgba(139, 92, 246, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .collect-more-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px #8B5CF6;
+        }
+        .stats-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+        }
+        .stats-modal.active {
+            display: flex;
+        }
+        .stats-content {
+            background: #232946;
+            color: #fff;
+            border-radius: 12px;
+            padding: 32px 40px;
+            min-width: 320px;
+            max-width: 90vw;
+            font-family: 'Press Start 2P', monospace;
+            box-shadow: 0 8px 40px #5A67D8;
+            text-align: center;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 18px;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .team-title { font-size: 1.2rem; }
+            .pokemon-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+            .pokemon-card { padding: 10px 4px 8px 4px; }
+            .pokemon-sprite { width: 64px; height: 64px; }
+            .stats-content { padding: 18px 8px; }
+        }
+    </style>
 </head>
 <body>
-    <h1>This is where players will build their pokemon team</h1>
+    <a href="{{ url_for('menu') }}" class="back-button">← Back to Menu</a>
+    <div class="team-container">
+        <div class="team-title">Build Your Pokémon Team</div>
+        <div class="team-bar" id="teamBar">
+            <!-- Team members will be shown here -->
+        </div>
+
+        <!-- Place this after <div class="team-bar" id="teamBar"> ... </div> -->
+        <button class="collect-more-btn" id="saveTeamBtn" style="margin-bottom:20px;">Save Team</button>
+
+        <div style="text-align:center; color:#fff; font-family:'Press Start 2P', monospace; margin-bottom:18px;">
+            Select 1-6 Pokémon for your team. <br><br> CTRL + CLICK to add a Pokémon to your team
+        </div>
+        <div class="pokemon-grid" id="pokemonGrid">
+            {% for pokemon in captured_pokemon %}
+            <div class="pokemon-card" 
+                 data-pokemon-id="{{ pokemon.id }}"
+                 data-pokemon='{{ pokemon|tojson }}'>
+                <img class="pokemon-sprite"
+                     src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ pokemon.Num }}.png"
+                     alt="{{ pokemon.Name }}">
+                <div class="pokemon-name">{{ pokemon.Name }}</div>
+                <button class="add-btn" style="background:#888;display:none;" disabled>In Team</button>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="collect-more-btn" onclick="window.location.href='{{ url_for('collectpokemon') }}'">Collect More</button>
+    </div>
+
+    <!-- Modal for stats -->
+    <div class="stats-modal" id="statsModal">
+        <div class="stats-content" id="statsContent">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <!-- Stats will be filled by JS -->
+        </div>
+    </div>
+
+    <script>
+        // Team selection logic
+        const maxTeamSize = 6;
+        const minTeamSize = 1;
+        let team = [];
+
+        const pokemonCards = document.querySelectorAll('.pokemon-card');
+        const teamBar = document.getElementById('teamBar');
+
+        function updateTeamBar() {
+            teamBar.innerHTML = '';
+            team.forEach(pokemon => {
+                const member = document.createElement('div');
+                member.className = 'team-member';
+                member.innerHTML = `
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.Num}.png" alt="${pokemon.Name}">
+                    <div style="font-size:10px;">${pokemon.Name}</div>
+                    <button class="remove-btn" onclick="removeFromTeam(${pokemon.id})">Remove</button>
+                `;
+                teamBar.appendChild(member);
+            });
+        }
+
+        function removeFromTeam(id) {
+            team = team.filter(p => p.id !== id);
+            updateTeamBar();
+            // Unselect card
+            document.querySelectorAll(`.pokemon-card[data-pokemon-id="${id}"]`).forEach(card => card.classList.remove('selected'));
+        }
+
+        pokemonCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                // If clicking the card, show stats modal
+                if (e.target.classList.contains('remove-btn')) return;
+                if (e.ctrlKey || e.metaKey) {
+                    // Ctrl+Click to select/unselect for team
+                    const pokemon = JSON.parse(card.dataset.pokemon);
+                    if (card.classList.contains('selected')) {
+                        removeFromTeam(pokemon.id);
+                    } else {
+                        if (team.length >= maxTeamSize) {
+                            alert('You can only have up to 6 Pokémon in your team!');
+                            return;
+                        }
+                        team.push(pokemon);
+                        card.classList.add('selected');
+                        updateTeamBar();
+                    }
+                } else {
+                    // Regular click: show stats
+                    showStatsModal(JSON.parse(card.dataset.pokemon));
+                }
+            });
+        });
+
+        function showStatsModal(pokemon) {
+            const modal = document.getElementById('statsModal');
+            const content = document.getElementById('statsContent');
+            content.innerHTML = `
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+                <h2 style="font-size:1.1rem; margin-bottom:10px;">${pokemon.Name} (#${pokemon.Num})</h2>
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.Num}.png" style="width:96px;height:96px;">
+                <div style="margin:12px 0;">
+                    <b>Type:</b> ${pokemon.Type1} ${pokemon.Type2 ? '/ ' + pokemon.Type2 : ''}
+                </div>
+                <div style="margin-bottom:8px;">
+                    <b>HP:</b> ${pokemon.HP} &nbsp; 
+                    <b>Attack:</b> ${pokemon.Attack} &nbsp; 
+                    <b>Defense:</b> ${pokemon.Defense}
+                </div>
+                <div style="margin-bottom:8px;">
+                    <b>Sp. Atk:</b> ${pokemon.SpAttack} &nbsp; 
+                    <b>Sp. Def:</b> ${pokemon.SpDefense} &nbsp; 
+                    <b>Speed:</b> ${pokemon.Speed}
+                </div>
+                <div>
+                    <b>Total:</b> ${pokemon.Total} &nbsp; 
+                    <b>Generation:</b> ${pokemon.Generation} &nbsp; 
+                    ${pokemon.Legendary ? '<span style="color:#FFD700;">★ Legendary</span>' : ''}
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('statsModal').classList.remove('active');
+        }
+
+        // Prevent background scroll when modal is open
+        document.getElementById('statsModal').addEventListener('wheel', e => {
+            if (document.getElementById('statsModal').classList.contains('active')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.getElementById('saveTeamBtn').onclick = function() {
+            if (team.length < minTeamSize) {
+                alert('You must have at least 1 Pokémon in your team!');
+                return;
+            }
+            fetch('{{ url_for("save_team") }}', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({team: team.map(p => p.id)})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Team saved!');
+                } else {
+                    alert(data.message || "Failed to save team.");
+                }
+            });
+        };
+
+    </script>
 </body>
 </html>

@@ -14,6 +14,7 @@ def create_user_pokemon_table():
                 user_id INT NOT NULL,
                 pokemon_id INT NOT NULL,
                 collected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                slot INT,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                 FOREIGN KEY (pokemon_id) REFERENCES pokemon(id) ON DELETE CASCADE,
                 UNIQUE KEY unique_user_pokemon (user_id, pokemon_id)

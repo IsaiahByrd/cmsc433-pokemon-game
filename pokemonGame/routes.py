@@ -143,13 +143,36 @@ def battle():
         return redirect(url_for('login'))
     return render_template('menu/battle/battle.html')
 
+@app.route('/collectpokemon')
+def collectpokemon():
+    # Check if user is logged in
+    if 'user_id' not in session:
+        flash("Please log in to access the battle arena.", "warning")
+        return redirect(url_for('login'))
+    return render_template('menu/teambuilder/collectpokemon.html')
+
 @app.route('/teambuilder')
 def teambuilder():
-    # Check if user is logged in
     if 'user_id' not in session:
         flash("Please log in to access the team builder.", "warning")
         return redirect(url_for('login'))
-    return render_template('menu/teambuilder/teambuilder.html')
+    user_id = session['user_id']
+    captured_ids = UserPokemon.get_user_collection(user_id)
+    captured_pokemon = [p for p in Pokemon.get_all_pokemon() if p['id'] in captured_ids]
+    return render_template('menu/teambuilder/teambuilder.html', captured_pokemon=captured_pokemon)
+
+@app.route('/save_team', methods=['POST'])
+def save_team():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+    user_id = session['user_id']
+    team_ids = request.json.get('team', [])
+    if not (1 <= len(team_ids) <= 6):
+        return jsonify({'success': False, 'message': 'Team must have 1-6 Pokémon.'}), 400
+    # Save team to DB (replace with your own logic)
+    success, message = UserPokemon.save_team(user_id, team_ids)
+    return jsonify({'success': success, 'message': message})
+
 
 @app.route('/viewcollection')
 def viewcollection():
