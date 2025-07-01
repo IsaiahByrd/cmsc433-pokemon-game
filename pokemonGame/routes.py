@@ -161,10 +161,10 @@ def viewcollection():
         # Fix malformed Pokemon names using the centralized method
         pokemon['Name'] = Pokemon.clean_pokemon_name(pokemon['Name'])
         
-        # Use high-quality still images instead of animated GIFs for better performance
-        pokemon['sprite_url'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['Num']}.png"
-        # Fallback to basic sprite if official artwork doesn't exist
-        pokemon['fallback_sprite'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon['Num']}.png"
+        # Use pixelated sprites for retro aesthetic and better performance
+        pokemon['sprite_url'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon['Num']}.png"
+        # Fallback to front_default sprite if numbered sprite doesn't exist
+        pokemon['fallback_sprite'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/front_default/{pokemon['Num']}.png"
     
     # Calculate collection statistics
     total_pokemon = len(all_pokemon)
