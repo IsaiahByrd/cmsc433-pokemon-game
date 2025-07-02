@@ -24,14 +24,17 @@ def initialize_db(excel_file_path):
         print("Clearing Database")
         cur.execute("TRUNCATE TABLE pokemon")
 
-        #read the excel file with the pokemon data
+        # read the excel file with the pokemon data
         df = pd.read_excel(excel_file_path)
-        df['Type 2'] = df['Type 2'].where(pd.notna(df['Type 2']), None) #handle empty
+        df['Type 2'] = df['Type 2'].where(pd.notna(df['Type 2']), None)  # handle empty
 
         # set of all the starter pokemon id
         starter_set = {1, 4, 7, 25, 152, 155, 158, 252, 255, 258, 387, 390, 393, 495, 498, 501, 650, 653, 656}
         df['Starter'] = False
         df.loc[df['#'].isin(starter_set), 'Starter'] = True
+
+        # filter to only include rows where Generation is 1, 2, or 3
+        df = df[df['Generation'].isin([1, 2, 3])]
 
         # create a query template that will be used in a loop to insert all pokemon to database
         sql_insert_query = """

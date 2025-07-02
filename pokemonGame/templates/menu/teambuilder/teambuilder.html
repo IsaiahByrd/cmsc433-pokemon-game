@@ -156,7 +156,7 @@
     <div class="team-container">
         <div class="team-title">Build Your Pokémon Team</div>
         <div class="team-bar" id="teamBar">
-            <!-- Team members will be shown here -->
+    <!-- Team members will be shown here dynamically by JavaScript -->
         </div>
 
         <!-- Place this after <div class="team-bar" id="teamBar"> ... </div> -->
@@ -190,10 +190,12 @@
     </div>
 
     <script>
-        // Team selection logic
         const maxTeamSize = 6;
         const minTeamSize = 1;
-        let team = [];
+        // Initialize team with user's current team from backend
+        let team = {{ user_team|tojson|default('[]') }};
+        // ...rest of your JS...
+        document.addEventListener('DOMContentLoaded', updateTeamBar);
 
         const pokemonCards = document.querySelectorAll('.pokemon-card');
         const teamBar = document.getElementById('teamBar');
@@ -210,6 +212,19 @@
                 `;
                 teamBar.appendChild(member);
             });
+        }
+
+        function addToTeam(pokemon) {
+            if (team.some(p => p.id === pokemon.id)) {
+                alert('This Pokémon is already in your team!');
+                return;
+            }
+            if (team.length >= maxTeamSize) {
+                alert('You can only have up to 6 Pokémon in your team!');
+                return;
+            }
+            team.push(pokemon);
+            updateTeamBar();
         }
 
         function removeFromTeam(id) {
@@ -229,11 +244,7 @@
                     if (card.classList.contains('selected')) {
                         removeFromTeam(pokemon.id);
                     } else {
-                        if (team.length >= maxTeamSize) {
-                            alert('You can only have up to 6 Pokémon in your team!');
-                            return;
-                        }
-                        team.push(pokemon);
+                        addToTeam(pokemon);
                         card.classList.add('selected');
                         updateTeamBar();
                     }
@@ -297,7 +308,14 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert('Team saved!');
+                    // Fetch the updated team from the backend
+                    fetch('{{ url_for("get_user_team_api") }}')
+                        .then(res => res.json())
+                        .then(newTeam => {
+                            team = newTeam;
+                            updateTeamBar();
+                            alert('Team saved!');
+                        });
                 } else {
                     alert(data.message || "Failed to save team.");
                 }

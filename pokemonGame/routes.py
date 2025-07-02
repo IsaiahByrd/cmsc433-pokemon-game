@@ -159,7 +159,10 @@ def teambuilder():
     user_id = session['user_id']
     captured_ids = UserPokemon.get_user_collection(user_id)
     captured_pokemon = [p for p in Pokemon.get_all_pokemon() if p['id'] in captured_ids]
-    return render_template('menu/teambuilder/teambuilder.html', captured_pokemon=captured_pokemon)
+    team_ids = UserPokemon.get_user_team(user_id)
+    all_pokemon = Pokemon.get_all_pokemon()
+    user_team = [p for p in all_pokemon if p['id'] in team_ids]
+    return render_template('menu/teambuilder/teambuilder.html', captured_pokemon=captured_pokemon, user_team=user_team)
 
 @app.route('/save_team', methods=['POST'])
 def save_team():
@@ -172,6 +175,17 @@ def save_team():
     # Save team to DB (replace with your own logic)
     success, message = UserPokemon.save_team(user_id, team_ids)
     return jsonify({'success': success, 'message': message})
+
+
+@app.route('/api/user_team')
+def get_user_team_api():
+    if 'user_id' not in session:
+        return jsonify([])
+    user_id = session['user_id']
+    team_ids = UserPokemon.get_user_team(user_id)
+    all_pokemon = Pokemon.get_all_pokemon()
+    user_team = [p for p in all_pokemon if p['id'] in team_ids]
+    return jsonify(user_team)
 
 
 @app.route('/viewcollection')
