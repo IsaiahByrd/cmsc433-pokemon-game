@@ -1,0 +1,461 @@
+/* Collect Pokemon page - Space theme styling */
+body {
+    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+    background-attachment: fixed;
+    font-family: 'Press Start 2P', monospace;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Starfield background */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    z-index: -1;
+    background-image: 
+        radial-gradient(2px 2px at 15% 20%, #fff, transparent),
+        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 35% 10%, #fff, transparent),
+        radial-gradient(1px 1px at 45% 60%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(2px 2px at 55% 35%, #fff, transparent),
+        radial-gradient(1px 1px at 65% 80%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 75% 15%, #fff, transparent),
+        radial-gradient(1px 1px at 85% 50%, rgba(255,255,255,0.8), transparent);
+    background-size: 100% 100%;
+}
+
+#collectContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#collectTitle {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#collectTitle h1 {
+    font-size: 2.5rem;
+    color: #fff;
+    text-shadow: 2px 2px 0px #000, 0 0 15px #5A67D8;
+    margin-bottom: 15px;
+}
+
+#collectTitle p {
+    font-size: 14px;
+    color: #E2E8F0;
+    text-shadow: 1px 1px 0px #000;
+    line-height: 1.6;
+}
+
+/* Pre-battle screen */
+#preBattleScreen {
+    text-align: center;
+}
+
+#yourTeam {
+    background: rgba(44, 62, 80, 0.85);
+    border-radius: 15px;
+    border: 2px solid rgba(90, 103, 216, 0.6);
+    box-shadow: 0 0 20px rgba(90, 103, 216, 0.3);
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+#yourTeam h2 {
+    font-size: 1.5rem;
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+    margin-bottom: 20px;
+}
+
+#teamDisplay {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.team-pokemon {
+    display: flex;
+    align-items: center;
+    background: rgba(60, 70, 90, 0.8);
+    border-radius: 10px;
+    border: 1px solid rgba(90, 103, 216, 0.4);
+    padding: 15px;
+    text-align: left;
+}
+
+.team-pokemon img {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+    margin-right: 15px;
+    filter: drop-shadow(0 0 5px rgba(80, 200, 120, 0.5));
+}
+
+.pokemon-info {
+    font-size: 11px;
+    color: #E2E8F0;
+}
+
+.pokemon-info strong {
+    font-size: 13px;
+    color: #fff;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Action buttons */
+.action-button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #50C878, #48BB78);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(80, 200, 120, 0.4);
+    margin: 10px;
+}
+
+.action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(80, 200, 120, 0.6);
+}
+
+.back-button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    padding: 12px 20px;
+    background: linear-gradient(45deg, #5A67D8, #4C51BF);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(90, 103, 216, 0.4);
+    display: inline-block;
+    margin: 10px;
+}
+
+.back-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(90, 103, 216, 0.6);
+}
+
+/* Battle screen */
+#battleScreen {
+    width: 100%;
+}
+
+#battleArena {
+    background: rgba(44, 62, 80, 0.9);
+    border-radius: 15px;
+    border: 2px solid rgba(90, 103, 216, 0.6);
+    box-shadow: 0 0 25px rgba(90, 103, 216, 0.3);
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+#enemyTeamDisplay {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+#enemyTeamDisplay h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+    margin-bottom: 15px;
+}
+
+#enemyTeam {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.enemy-pokemon {
+    background: rgba(60, 70, 90, 0.8);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 107, 53, 0.4);
+    padding: 10px;
+    text-align: center;
+    min-width: 100px;
+}
+
+.enemy-pokemon img {
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 5px rgba(255, 107, 53, 0.5));
+}
+
+.enemy-pokemon.fainted {
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+/* Current battle display */
+#currentBattle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0;
+    min-height: 200px;
+}
+
+#enemyPokemonDisplay, #userPokemonDisplay {
+    background: rgba(60, 70, 90, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    min-width: 250px;
+}
+
+#enemyPokemonDisplay {
+    border: 2px solid rgba(255, 107, 53, 0.6);
+}
+
+#userPokemonDisplay {
+    border: 2px solid rgba(80, 200, 120, 0.6);
+}
+
+#enemyPokemonDisplay img, #userPokemonDisplay img {
+    width: 96px;
+    height: 96px;
+    image-rendering: pixelated;
+    margin: 10px 0;
+}
+
+#enemyInfo span, #userInfo span {
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* HP bars */
+.hp-bar {
+    width: 150px;
+    height: 12px;
+    background: rgba(60, 60, 60, 0.8);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+    margin: 8px auto;
+}
+
+.hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #50C878, #90EE90);
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+/* Battle actions */
+#battleActions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.battle-button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 12px 20px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.battle-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#attackBtn {
+    background: linear-gradient(45deg, #FF6B35, #F7931E);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+}
+
+#attackBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+}
+
+#specialAttackBtn {
+    background: linear-gradient(45deg, #8B5CF6, #7C3AED);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+#specialAttackBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+}
+
+.collect-button {
+    background: linear-gradient(45deg, #50C878, #48BB78) !important;
+    box-shadow: 0 4px 15px rgba(80, 200, 120, 0.4) !important;
+}
+
+.collect-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(80, 200, 120, 0.6) !important;
+}
+
+#switchBtn {
+    background: linear-gradient(45deg, #5A67D8, #4C51BF);
+    box-shadow: 0 4px 15px rgba(90, 103, 216, 0.4);
+}
+
+#switchBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(90, 103, 216, 0.6);
+}
+
+/* Switch panel */
+#switchPanel {
+    background: rgba(44, 62, 80, 0.9);
+    border-radius: 10px;
+    border: 2px solid rgba(90, 103, 216, 0.6);
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+#switchPanel h3 {
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+    margin-bottom: 15px;
+}
+
+#switchOptions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.switch-option {
+    background: rgba(60, 70, 90, 0.8);
+    border-radius: 8px;
+    border: 1px solid rgba(80, 200, 120, 0.4);
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.switch-option:hover {
+    border-color: rgba(80, 200, 120, 0.8);
+    box-shadow: 0 0 15px rgba(80, 200, 120, 0.3);
+}
+
+.switch-option img {
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated;
+    margin-bottom: 8px;
+}
+
+.switch-option .pokemon-name {
+    font-size: 11px;
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+}
+
+/* Battle log */
+#battleLog {
+    background: rgba(44, 62, 80, 0.85);
+    border-radius: 10px;
+    border: 2px solid rgba(90, 103, 216, 0.4);
+    padding: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#battleLog h3 {
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+    margin-bottom: 10px;
+}
+
+#logContent {
+    font-size: 10px;
+    color: #E2E8F0;
+    line-height: 1.4;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #collectTitle h1 {
+        font-size: 1.8rem;
+    }
+    
+    #collectTitle p {
+        font-size: 12px;
+    }
+    
+    #teamDisplay {
+        grid-template-columns: 1fr;
+    }
+    
+    #currentBattle {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    #enemyPokemonDisplay, #userPokemonDisplay {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    #battleActions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .battle-button {
+        width: 200px;
+    }
+    
+    #switchOptions {
+        flex-direction: column;
+        align-items: center;
+    }
+}

@@ -2,50 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Battle</title>
-    <script src="{{ url_for('static', filename='battle.js') }}" async></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='battle.css') }}">
 </head>
 <body>
     <div class="battlefield">
-        <img class="battleBackground" src="{{ url_for('static', filename='battle-background.gif')}}">
-
         <!-- Opponent Pokémon Info -->
         <div class="pokemon-container-opponent">
             <div class="pokemon-info">
                 <span class="pokemon-name" id="opponent-pokemon-name">Loading...</span>
                 <span class="hp" id="opponent-hp">HP: ?</span>
-                <div class="attack" id="opponent-attack">Damage: ?</div>
-                <div class="speed" id="opponent-speed">Speed: ?</div>
+                <div class="health-bar">
+                    <div class="health-fill" id="opponent-health-fill" style="width: 100%;"></div>
+                </div>
+                <div class="attack" id="opponent-attack">ATK: ?</div>
+                <div class="speed" id="opponent-speed">SPD: ?</div>
             </div>
         </div>
-        <img class="opponentPokemon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png">
-        
-        <!-- User Pokémon Info -->
+        <img class="opponentPokemon" id="opponent-pokemon-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="Opponent Pokemon">
+
+        <!-- Friendly Pokémon Info -->
         <div class="pokemon-container-friendly">
             <div class="pokemon-info">
                 <span class="pokemon-name" id="player-pokemon-name">Loading...</span>
                 <span class="friendly-hp" id="player-hp">HP: ?</span>
-                <div class="attack" id="player-attack">Damage: ?</div>
-                <div class="spattack" id="player-spattack">Sp. Atk: ?</div>
-                <div class="speed" id="player-speed">Speed: ?</div>
+                <div class="health-bar">
+                    <div class="health-fill" id="player-health-fill" style="width: 100%;"></div>
+                </div>
+                <div class="attack" id="player-attack">ATK: ?</div>
+                <div class="spattack" id="player-spattack">SP.ATK: ?</div>
+                <div class="speed" id="player-speed">SPD: ?</div>
             </div>
         </div>
-        <img class="friendlyPokemon" id="player-pokemon-sprite" src="">
+        <img class="friendlyPokemon" id="player-pokemon-sprite" src="" alt="Your Pokemon">
     </div>
 
-    <div class="actions">
-        <button id="attack-btn">Attack</button>
-        <button id="catch-btn">Catch</button>
-        <button id="home-btn">Home</button>
-        <button id="spattack-btn">Special Attack</button>
+    <!-- Battle Controls -->
+    <div class="battle-controls">
+        <button id="attack-btn" class="battle-button">Attack</button>
+        <button id="spattack-btn" class="battle-button">Special Attack</button>
+        <button id="heal-btn" class="battle-button">Heal (3 uses)</button>
+        <button id="catch-btn" class="battle-button">Catch</button>
+        <button id="home-btn" class="battle-button">Return to Menu</button>
     </div>
-    <div id="post-battle-overlay" class="hidden">
-        <div class="post-battle-modal">
-            <h2>Battle Finished!</h2>
-            <button id="fight-another-btn">Fight Another Pokémon</button>
-            <button id="go-home-btn">Go to Menu</button>
-        </div>
+
+    <!-- Post-battle options -->
+    <div id="post-battle-options" style="display: none;">
+        <button id="fight-another-btn">Fight Another Pokémon</button>
+        <button id="go-home-btn">Go to Menu</button>
     </div>
+
+    <script src="{{ url_for('static', filename='battle.js') }}"></script>
 </body>
 </html>
