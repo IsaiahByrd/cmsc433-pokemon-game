@@ -1,4 +1,4 @@
-// Player's stats stats
+// users stats
 var playerPokemon = {
     name: "",
     hp: 0,
@@ -21,6 +21,7 @@ var opponent = {
     speed: 0
 };
 
+//opening screen
 window.onload = function () {
     // Load player Pokemon from db
     fetch('/api/player_pokemon')
@@ -44,7 +45,7 @@ window.onload = function () {
             document.getElementById('player-attack').textContent = "Damage: " + playerPokemon.attack;
             document.getElementById('player-spattack').textContent = "Sp. Atk: " + playerPokemon.spAttack;
             document.getElementById('player-speed').textContent = "Speed: " + playerPokemon.speed;
-
+            
         })
         .catch(function (error) {
             console.log("Failed to load player Pokémon:", error);
@@ -147,6 +148,7 @@ function attack() {
     }
 }
 
+//special attack funtion
 function specialAttack() {
     if (opponent.hp <= 0 || playerPokemon.hp <= 0) {
         alert("Battle is over.");
@@ -191,8 +193,12 @@ function catchPokemon() {
     .then(function (data) {
         if (data.success) {
             alert("You caught " + opponent.name + "!");
-            document.getElementById('post-battle-options').style.display = 'block';
-        } else {
+            document.getElementById('post-battle-overlay').classList.remove('hidden');
+            document.getElementById('attack-btn').disabled = true;
+            document.getElementById('spattack-btn').disabled = true;
+            document.getElementById('catch-btn').disabled = true;
+            document.getElementById('home-btn').disabled = true;
+    } else {
             alert("Failed to catch Pokémon.");
         }
     })
@@ -222,7 +228,7 @@ function updatePlayerHP() {
 
 
 function endBattle() {
-    document.getElementById('post-battle-options').style.display = 'block';
+    document.getElementById('post-battle-overlay').classList.remove('hidden');
     document.getElementById('attack-btn').disabled = true;
     document.getElementById('spattack-btn').disabled = true;
     document.getElementById('catch-btn').disabled = true;

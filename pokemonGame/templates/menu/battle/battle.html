@@ -20,8 +20,8 @@
             </div>
         </div>
         <img class="opponentPokemon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png">
-
-        <!-- Friendly Pokémon Info (Pikachu) -->
+        
+        <!-- User Pokémon Info -->
         <div class="pokemon-container-friendly">
             <div class="pokemon-info">
                 <span class="pokemon-name" id="player-pokemon-name">Loading...</span>
@@ -34,17 +34,18 @@
         <img class="friendlyPokemon" id="player-pokemon-sprite" src="">
     </div>
 
-    <div>
+    <div class="actions">
         <button id="attack-btn">Attack</button>
         <button id="catch-btn">Catch</button>
         <button id="home-btn">Home</button>
         <button id="spattack-btn">Special Attack</button>
     </div>
-
-    <div id="post-battle-options" style="display: none; margin-top: 20px;">
-        <button id="fight-another-btn">Fight Another Pokémon</button>
-        <button id="go-home-btn">Go to Menu</button>
+    <div id="post-battle-overlay" class="hidden">
+        <div class="post-battle-modal">
+            <h2>Battle Finished!</h2>
+            <button id="fight-another-btn">Fight Another Pokémon</button>
+            <button id="go-home-btn">Go to Menu</button>
+        </div>
     </div>
-
 </body>
 </html>
