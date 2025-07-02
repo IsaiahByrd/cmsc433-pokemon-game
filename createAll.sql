@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS pokemon (
     SpDefense INT NOT NULL,
     Speed INT NOT NULL,
     Generation INT NOT NULL,
-    Legendary BOOLEAN NOT NULL
+    Legendary BOOLEAN NOT NULL,
+    Starter BOOLEAN DEFAULT FALSE
 );
 

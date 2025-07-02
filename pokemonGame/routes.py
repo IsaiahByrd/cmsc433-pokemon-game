@@ -17,9 +17,7 @@ def generate_random_password():
     password = ''.join(secrets.choice(characters) for _ in range(12))
     return password
 
-@app.route('/')
-def index():
-    return render_template('proj3.html')
+from werkzeug.security import generate_password_hash, check_password_hash
 
 @app.route('/')
 def home():
@@ -35,6 +33,7 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+
         
         # Find user in database
         user = User.find_by_username(username)
@@ -43,6 +42,12 @@ def login():
             # Login successful
             session['user_id'] = user.id
             session['username'] = user.username
+
+             # Check if user has any collected Pokémon
+            if not UserPokemon.get_user_collection(user.id):
+                return redirect(url_for('choose_starter'))
+            
+
             flash(f"Welcome back, {username}!", "success")
             return redirect(url_for('menu'))
         else:
@@ -50,7 +55,8 @@ def login():
             flash("Invalid username or password. Please try again.", "error")
             return render_template('/auth/login.html', username=username)
 
-    return render_template('/auth/login.html')
+
+    return render_template('auth/login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -109,6 +115,9 @@ def register():
                 flash(f"Account created! Your username is '{username}' and your password is '{password}'. Please save these credentials!", "info")
             else:
                 flash(f"Registration successful! Welcome, {username}!", "success")
+
+            if not UserPokemon.get_user_collection(user.id):
+                return redirect(url_for('choose_starter'))
             
             return redirect(url_for('menu'))
         else:
@@ -116,6 +125,7 @@ def register():
             return render_template('/auth/register.html', username=username)
     
     return render_template('/auth/register.html')
+
 
 @app.route('/logout')
 def logout():
@@ -133,13 +143,50 @@ def battle():
         return redirect(url_for('login'))
     return render_template('menu/battle/battle.html')
 
+@app.route('/collectpokemon')
+def collectpokemon():
+    # Check if user is logged in
+    if 'user_id' not in session:
+        flash("Please log in to access the battle arena.", "warning")
+        return redirect(url_for('login'))
+    return render_template('menu/teambuilder/collectpokemon.html')
+
 @app.route('/teambuilder')
 def teambuilder():
-    # Check if user is logged in
     if 'user_id' not in session:
         flash("Please log in to access the team builder.", "warning")
         return redirect(url_for('login'))
-    return render_template('menu/teambuilder/teambuilder.html')
+    user_id = session['user_id']
+    captured_ids = UserPokemon.get_user_collection(user_id)
+    captured_pokemon = [p for p in Pokemon.get_all_pokemon() if p['id'] in captured_ids]
+    team_ids = UserPokemon.get_user_team(user_id)
+    all_pokemon = Pokemon.get_all_pokemon()
+    user_team = [p for p in all_pokemon if p['id'] in team_ids]
+    return render_template('menu/teambuilder/teambuilder.html', captured_pokemon=captured_pokemon, user_team=user_team)
+
+@app.route('/save_team', methods=['POST'])
+def save_team():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+    user_id = session['user_id']
+    team_ids = request.json.get('team', [])
+    if not (1 <= len(team_ids) <= 6):
+        return jsonify({'success': False, 'message': 'Team must have 1-6 Pokémon.'}), 400
+    # Save team to DB (replace with your own logic)
+    success, message = UserPokemon.save_team(user_id, team_ids)
+    return jsonify({'success': success, 'message': message})
+
+
+@app.route('/api/user_team')
+def get_user_team_api():
+    if 'user_id' not in session:
+        return jsonify([])
+    user_id = session['user_id']
+    team_ids = UserPokemon.get_user_team(user_id)
+    all_pokemon = Pokemon.get_all_pokemon()
+    user_team = [p for p in all_pokemon if p['id'] in team_ids]
+    return jsonify(user_team)
+
 
 @app.route('/viewcollection')
 def viewcollection():
@@ -252,6 +299,20 @@ def get_pokemon_api():
     
     return jsonify(pokemon_data)
 
+@app.route('/choose_starter', methods=['GET', 'POST'])
+def choose_starter():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        pokemon_id = int(request.form['pokemon_id'])
+        UserPokemon.add_pokemon_to_collection(session['user_id'], pokemon_id)
+        flash("Starter Pokémon chosen! Good luck!", "success")
+        return redirect(url_for('menu'))
+
+    # Show all starter Pokémon (you can filter by generation/types if you want)
+    all_pokemon = Pokemon.get_all_pokemon()
+    return render_template('choose_starter.html', pokemon_list=all_pokemon)
 #catch route
 @app.route('/catch/<int:pokemon_id>', methods=['POST'])
 def catch_pokemon(pokemon_id):

@@ -121,16 +121,35 @@ class UserPokemon:
         """Get all Pokemon IDs that a user has collected."""
         conn = get_db_connection()
         if not conn:
-            return set()
+            return []
         
         cursor = conn.cursor()
         try:
             cursor.execute("SELECT pokemon_id FROM user_pokemon WHERE user_id = ?", (user_id,))
-            collected_ids = {row[0] for row in cursor.fetchall()}
+            collected_ids = [row[0] for row in cursor.fetchall()]
             return collected_ids
         except mariadb.Error as e:
             print(f"Error getting user collection: {e}")
-            return set()
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def get_user_team(user_id):
+        """Get all Pokemon IDs that a user has in their team (slot is not NULL)."""
+        conn = get_db_connection()
+        if not conn:
+            return []
+        
+        cursor = conn.cursor()
+        try:
+            cursor.execute("SELECT pokemon_id FROM user_pokemon WHERE user_id = ? AND slot IS NOT NULL ORDER BY slot", (user_id,))
+            team_ids = [row[0] for row in cursor.fetchall()]
+            return team_ids
+        except mariadb.Error as e:
+            print(f"Error getting user team: {e}")
+            return []
         finally:
             cursor.close()
             conn.close()
@@ -157,6 +176,38 @@ class UserPokemon:
         finally:
             cursor.close()
             conn.close()
+    
+    # In UserPokemon or a new UserTeam class
+    @staticmethod
+    def save_team(user_id, team_ids):
+        """
+        Update the user's team slots in user_pokemon.
+        Only updates the slot column for the given user_id and pokemon_ids.
+        If a pokemon_id is not in the user's collection, it will not be updated.
+        """
+        conn = get_db_connection()
+        if not conn:
+            return False, "DB error"
+        cursor = conn.cursor()
+        try:
+            # Reset all slots to NULL for this user
+            cursor.execute(
+                "UPDATE user_pokemon SET slot = NULL WHERE user_id = ?", (user_id,)
+            )
+            # Update slot for each pokemon in the new team
+            for slot, pid in enumerate(team_ids, 1):
+                cursor.execute(
+                    "UPDATE user_pokemon SET slot = ? WHERE user_id = ? AND pokemon_id = ?",
+                    (slot, user_id, pid)
+                )
+            conn.commit()
+            return True, "Team saved"
+        except Exception as e:
+            conn.rollback()
+            return False, str(e)
+        finally:
+            cursor.close()
+            conn.close()
 
 class Pokemon:
     """Model for Pokemon data."""
@@ -174,6 +225,24 @@ class Pokemon:
             cursor.execute("SELECT * FROM pokemon WHERE Generation <= 3 ORDER BY Num")
             pokemon_data = cursor.fetchall()
             return pokemon_data
+        except mariadb.Error as e:
+            print(f"Error getting Pokemon data: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def get_all__starters():
+        conn = get_db_connection()
+        if not conn:
+            return []
+        
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute("SELECT * FROM pokemon WHERE starter=1 GROUP BY Generation ORDER BY Num ")
+            starter_data = cursor.fetchall()
+            return starter_data
         except mariadb.Error as e:
             print(f"Error getting Pokemon data: {e}")
             return []
