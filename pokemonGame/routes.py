@@ -372,3 +372,31 @@ def random_pokemon():
     finally:
         cursor.close()
         conn.close()
+
+
+@app.route('/api/player_pokemon')
+def get_player_pokemon():
+    player_id = session.get('user_id')
+    if not player_id:
+        return jsonify({'error': 'Not logged in'}), 401
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute("""
+        SELECT p.*
+        FROM user_pokemon up
+        JOIN pokemon p ON up.pokemon_id = p.id
+        WHERE up.user_id = ? 
+        LIMIT 1
+    """, (player_id,))
+    
+    row = cursor.fetchone()
+    conn.close()
+
+    if row:
+        return jsonify(row)
+    else:
+        return jsonify({'error': 'No starter Pokémon found'}), 404
+
+

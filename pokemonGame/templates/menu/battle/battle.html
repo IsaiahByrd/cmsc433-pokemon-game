@@ -10,38 +10,41 @@
     <div class="battlefield">
         <img class="battleBackground" src="{{ url_for('static', filename='battle-background.gif')}}">
 
-        <div class="pokemon-container-friendly">
-            <div class="pokemon-info">
-                <span class="pokemon-name">Loading...</span>
-                <span class="friendly-hp"></span>
-                <div id="health-info">HP: NA/NA
-                    <div class="health-bar">
-                        <div class="health"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <img class="friendlyPokemon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png">
-
+        <!-- Opponent Pokémon Info -->
         <div class="pokemon-container-opponent">
             <div class="pokemon-info">
                 <span class="pokemon-name" id="opponent-pokemon-name">Loading...</span>
-                <span class="hp" id="opponent-hp"></span>
-                <div id="health-info">HP: NA/NA
-                    <div class="health-bar">
-                        <div class="opponent-health"></div>
-                    </div>
-                </div>
+                <span class="hp" id="opponent-hp">HP: ?</span>
+                <div class="attack" id="opponent-attack">Damage: ?</div>
+                <div class="speed" id="opponent-speed">Speed: ?</div>
             </div>
         </div>
         <img class="opponentPokemon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png">
-        
-    </div>
 
+        <!-- Friendly Pokémon Info (Pikachu) -->
+        <div class="pokemon-container-friendly">
+            <div class="pokemon-info">
+                <span class="pokemon-name" id="player-pokemon-name">Loading...</span>
+                <span class="friendly-hp" id="player-hp">HP: ?</span>
+                <div class="attack" id="player-attack">Damage: ?</div>
+                <div class="spattack" id="player-spattack">Sp. Atk: ?</div>
+                <div class="speed" id="player-speed">Speed: ?</div>
+            </div>
+        </div>
+        <img class="friendlyPokemon" id="player-pokemon-sprite" src="">
+    </div>
 
     <div>
         <button id="attack-btn">Attack</button>
         <button id="catch-btn">Catch</button>
+        <button id="home-btn">Home</button>
+        <button id="spattack-btn">Special Attack</button>
     </div>
+
+    <div id="post-battle-options" style="display: none; margin-top: 20px;">
+        <button id="fight-another-btn">Fight Another Pokémon</button>
+        <button id="go-home-btn">Go to Menu</button>
+    </div>
+
 </body>
 </html>
