@@ -137,11 +137,21 @@ def logout():
 
 @app.route('/battle')
 def battle():
-    # Check if user is logged in
     if 'user_id' not in session:
         flash("Please log in to access the battle arena.", "warning")
         return redirect(url_for('login'))
-    return render_template('menu/battle/battle.html')
+
+    user_id = session['user_id']
+    team_ids = UserPokemon.get_user_team(user_id)
+    all_pokemon = Pokemon.get_all_pokemon()
+    user_team = [p for p in all_pokemon if p['id'] in team_ids]
+
+    if not user_team:
+        flash("Please build a team before battling.", "warning")
+        return redirect(url_for('teambuilder'))
+
+    return render_template('menu/battle/battle.html', team=user_team)
+
 
 @app.route('/collectpokemon')
 def collectpokemon():

@@ -21,95 +21,89 @@ var opponent = {
     speed: 0
 };
 
+let switchModal, pokemonOptionsContainer;
+
 //opening screen
 window.onload = function () {
-    // Load player Pokemon from db
-    fetch('/api/player_pokemon')
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            console.log("Player Pokemon data received:", data);
-            playerPokemon.name = data.Name;
-            // Enhanced scaling for starter Pokemon to make battles more engaging
-            // Higher HP multiplier and better minimums for survivability
-            playerPokemon.hp = Math.max(120, Math.floor(data.HP * 2.5));
-            playerPokemon.maxHp = Math.max(120, Math.floor(data.HP * 2.5));
-            // Better attack scaling for competitive battles
-            playerPokemon.attack = Math.max(30, Math.floor(data.Attack * 1.2));
-            playerPokemon.spAttack = Math.max(30, Math.floor((data.SpAttack || data.Attack) * 1.2));
-            playerPokemon.speed = Math.max(25, data.Speed);
-            playerPokemon.id = data.id;
-            playerPokemon.num = data.Num;
-            console.log("Player Pokemon object after enhanced scaling:", playerPokemon);
+  // — grab modal elements —
+  switchModal = document.getElementById('switch-modal');
+  pokemonOptionsContainer = document.getElementById('pokemon-options');
 
-            // Set player Pokemon info in HTML
-            document.getElementById('player-pokemon-name').textContent = playerPokemon.name;
-            document.getElementById('player-hp').textContent = "HP: " + playerPokemon.hp + "/" + playerPokemon.maxHp;
-            // Use back sprite for player's Pokemon with fallback
-            var playerSprite = document.getElementById('player-pokemon-sprite');
-            var backSpriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/" + playerPokemon.num + ".png";
-            var frontSpriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + playerPokemon.num + ".png";
-            
-            playerSprite.src = backSpriteUrl;
-            playerSprite.onerror = function() {
-                console.log("Back sprite not found, using front sprite for Pokemon", playerPokemon.num);
-                playerSprite.src = frontSpriteUrl;
-                playerSprite.style.transform = "scaleX(-1)"; // Flip horizontally if using front sprite
-            };
-            
-            document.getElementById('player-attack').textContent = "ATK: " + playerPokemon.attack;
-            document.getElementById('player-spattack').textContent = "SP.ATK: " + playerPokemon.spAttack;
-            document.getElementById('player-speed').textContent = "SPD: " + playerPokemon.speed;
+  if (typeof playerTeam !== 'undefined' && playerTeam.length > 0) {
+    const p = playerTeam[currentPokemonIndex];
 
-        })
-        .catch(function (error) {
-            console.log("Failed to load player Pokémon:", error);
-        });
+    // 2) Compute stats into your working object…
+    playerPokemon.name     = p.Name;
+    playerPokemon.hp       = Math.max(120, Math.floor(p.HP * 2.5));
+    playerPokemon.maxHp    = playerPokemon.hp;
+    playerPokemon.attack   = Math.max(30,  Math.floor(p.Attack * 1.2));
+    playerPokemon.spAttack = Math.max(30,  Math.floor((p.SpAttack || p.Attack) * 1.2));
+    playerPokemon.speed    = Math.max(25,  p.Speed);
+    playerPokemon.id       = p.id;
+    playerPokemon.num      = p.Num;
 
-    // Load random opponent from DB
-    fetch('/api/random_pokemon')
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            console.log("Opponent Pokemon data received:", data);
-            opponent.id = data.id;
-            opponent.name = data.Name;
-            // Enhanced opponent scaling to match player improvements
-            // Reasonable HP that provides a good challenge
-            opponent.hp = Math.max(90, Math.floor(data.HP * 1.8));
-            opponent.maxHp = Math.max(90, Math.floor(data.HP * 1.8));
-            // Balanced attack that won't one-shot but still threatens
-            opponent.attack = Math.max(18, Math.floor(data.Attack * 0.8));
-            opponent.speed = Math.max(15, Math.floor(data.Speed * 0.9));
-            console.log("Opponent Pokemon object after enhanced scaling:", opponent);
+    // 3) **Save them back** into the same slot so you don’t lose HP on switches
+    p.hp       = playerPokemon.hp;
+    p.maxHp    = playerPokemon.maxHp;
+    p.attack   = playerPokemon.attack;
+    p.spAttack = playerPokemon.spAttack;
+    p.speed    = playerPokemon.speed;
 
-            document.getElementById('opponent-pokemon-name').textContent = opponent.name;
-            document.getElementById('opponent-pokemon-sprite').src = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + data.Num + ".png";
-            document.getElementById('opponent-hp').textContent = "HP: " + opponent.hp + "/" + opponent.maxHp;
-            document.getElementById('opponent-attack').textContent = "ATK: " + opponent.attack;
-            document.getElementById('opponent-speed').textContent = "SPD: " + opponent.speed;
-        })
-        .catch(function (error) {
-            console.log("Failed to load opponent:", error);
-        });
+    document.getElementById('player-pokemon-name').textContent = playerPokemon.name;
+    document.getElementById('player-hp').textContent = `HP: ${playerPokemon.hp}/${playerPokemon.maxHp}`;
+    document.getElementById('player-health-fill').style.width = (playerPokemon.hp / playerPokemon.maxHp * 100) + '%';
+    document.getElementById('player-attack').textContent = `ATK: ${playerPokemon.attack}`;
+    document.getElementById('player-spattack').textContent= `SP.ATK: ${playerPokemon.spAttack}`;
+    document.getElementById('player-speed').textContent = `SPD: ${playerPokemon.speed}`;
 
-    document.getElementById('attack-btn').addEventListener('click', attack);
-    document.getElementById('spattack-btn').addEventListener('click', specialAttack);
-    document.getElementById('catch-btn').addEventListener('click', catchPokemon);
-    document.getElementById('heal-btn').addEventListener('click', healPokemon);
-    document.getElementById('home-btn').addEventListener('click', function () {
-        window.location.href = "/menu";
-    });
+    const playerSprite = document.getElementById('player-pokemon-sprite');
+    const backUrl  = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${playerPokemon.num}.png`;
+    const frontUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${playerPokemon.num}.png`;
+    playerSprite.src = backUrl;
+    playerSprite.onerror = () => {
+      playerSprite.src = frontUrl;
+      playerSprite.style.transform = 'scaleX(-1)';
+    };
+  }
 
-    document.getElementById('fight-another-btn').addEventListener('click', function () {
-        window.location.reload();
-    });
+  fetch('/api/random_pokemon')
+    .then(res => res.json())
+    .then(data => {
+      opponent.id     = data.id;
+      opponent.name   = data.Name;
+      opponent.hp     = Math.max(90,  Math.floor(data.HP  * 1.8));
+      opponent.maxHp  = opponent.hp;
+      opponent.attack = Math.max(18,  Math.floor(data.Attack * 0.8));
+      opponent.speed  = Math.max(15,  Math.floor(data.Speed  * 0.9));
 
-    document.getElementById('go-home-btn').addEventListener('click', function () {
-        window.location.href = "/menu";
-    });
+      document.getElementById('opponent-pokemon-name').textContent = opponent.name;
+      document.getElementById('opponent-pokemon-sprite').src      =
+        `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.Num}.png`;
+      document.getElementById('opponent-hp').textContent    = `HP: ${opponent.hp}/${opponent.maxHp}`;
+      document.getElementById('opponent-attack').textContent= `ATK: ${opponent.attack}`;
+      document.getElementById('opponent-speed').textContent = `SPD: ${opponent.speed}`;
+    })
+    .catch(err => console.error('Failed to load opponent:', err));
+
+  document.getElementById('attack-btn').addEventListener('click', attack);
+  document.getElementById('spattack-btn').addEventListener('click', specialAttack);
+  document.getElementById('catch-btn').addEventListener('click', catchPokemon);
+  document.getElementById('heal-btn').addEventListener('click', healPokemon);
+  document.getElementById('home-btn').addEventListener('click', () => window.location.href = '/menu');
+  document.getElementById('fight-another-btn').addEventListener('click', () => window.location.reload());
+  document.getElementById('go-home-btn').addEventListener('click', () => window.location.href = '/menu');
+  document.getElementById('switch-btn').addEventListener('click', openSwitchModal);
+  document.getElementById('cancel-switch-btn').addEventListener('click', () => {
+    switchModal.classList.add('hidden');
+  });
+
+  const switchBtn = document.getElementById('switch-btn');
+  if (switchBtn) {
+    switchBtn.disabled         = false;
+    switchBtn.style.opacity    = '1';
+    switchBtn.style.cursor     = 'pointer';
+    switchBtn.style.pointerEvents = 'auto';
+  }
 };
 
 
@@ -225,20 +219,34 @@ function executeEnemyAttack(callback) {
 }
 
 function disableBattleButtons() {
-    document.getElementById('attack-btn').disabled = true;
-    document.getElementById('spattack-btn').disabled = true;
-    document.getElementById('catch-btn').disabled = true;
-    const healBtn = document.getElementById('heal-btn');
-    if (healBtn) healBtn.disabled = true;
+  document.getElementById('attack-btn').disabled   = true;
+  document.getElementById('spattack-btn').disabled = true;
+  document.getElementById('catch-btn').disabled    = true;
+
+  const healBtn = document.getElementById('heal-btn');
+  if (healBtn) healBtn.disabled = true;
+
 }
 
+
 function enableBattleButtons() {
-    document.getElementById('attack-btn').disabled = false;
-    document.getElementById('spattack-btn').disabled = false;
-    document.getElementById('catch-btn').disabled = false;
-    const healBtn = document.getElementById('heal-btn');
-    if (healBtn && healingUses > 0) healBtn.disabled = false;
+  document.getElementById('attack-btn').disabled   = false;
+  document.getElementById('spattack-btn').disabled = false;
+  document.getElementById('catch-btn').disabled    = false;
+
+  const healBtn = document.getElementById('heal-btn');
+  if (healBtn && healingUses > 0) healBtn.disabled = false;
+
+  // — re-enable switch-btn on every “end of sequence” —
+  const switchBtn = document.getElementById('switch-btn');
+  if (switchBtn) {
+    switchBtn.disabled         = false;
+    switchBtn.style.opacity    = '1';
+    switchBtn.style.cursor     = 'pointer';
+    switchBtn.style.pointerEvents = 'auto';
+  }
 }
+
 
 function specialAttack() {
     if (opponent.hp <= 0 || playerPokemon.hp <= 0) {
@@ -275,7 +283,6 @@ function executePlayerSpecialAttack(callback) {
     var spDamage = Math.max(12, baseDamage + variance);
     console.log("Special attack damage calculated:", spDamage, "(base:", baseDamage, "+ variance:", variance, ")");
     
-    // DAMAGE THE OPPONENT
     opponent.hp -= spDamage;
     if (opponent.hp < 0) opponent.hp = 0;
     console.log("Opponent HP after special attack:", opponent.hp);
@@ -464,8 +471,67 @@ function endBattle() {
     document.getElementById('attack-btn').disabled = true;
     document.getElementById('spattack-btn').disabled = true;
     document.getElementById('catch-btn').disabled = true;
-    // Disable heal button too
     const healBtn = document.getElementById('heal-btn');
     if (healBtn) healBtn.disabled = true;
 }
+
+function openSwitchModal() {
+  const switchModal = document.getElementById('switch-modal');
+  const container   = document.getElementById('pokemon-options');
+
+  container.innerHTML = '';
+  playerTeam.forEach((poke, idx) => {
+    if (idx !== currentPokemonIndex && (poke.hp ?? 1) > 0) {
+      const btn = document.createElement('button');
+      btn.textContent = `${poke.Name} (HP: ${poke.hp})`;
+      btn.addEventListener('click', () => switchPokemon(idx));
+      container.appendChild(btn);
+    }
+  });
+
+  switchModal.classList.remove('hidden');
+}
+
+function switchPokemon(index) {
+  // 1) Save the outgoing Pokémon’s current HP back into its team slot
+  const oldPoke = playerTeam[currentPokemonIndex];
+  oldPoke.HP = playerPokemon.hp;
+
+  // 2) Update index and grab new Pokémon
+  currentPokemonIndex = index;
+  const poke = playerTeam[index];
+
+  // 3) Recompute stats
+  playerPokemon.name     = poke.Name;
+  playerPokemon.hp       = Math.max(0, poke.HP);  // now reads saved HP!
+  playerPokemon.maxHp    = Math.max(120, Math.floor(poke.HPOriginal * 2.5 || poke.HP * 2.5));
+  playerPokemon.attack   = Math.max(30,  Math.floor(poke.Attack * 1.2));
+  playerPokemon.spAttack = Math.max(30,  Math.floor((poke.SpAttack || poke.Attack) * 1.2));
+  playerPokemon.speed    = Math.max(25,  poke.Speed);
+  playerPokemon.id       = poke.id;
+  playerPokemon.num      = poke.Num;
+
+  // 4) Update UI
+  document.getElementById('player-pokemon-name').textContent = playerPokemon.name;
+  document.getElementById('player-hp').textContent = `HP: ${playerPokemon.hp}/${playerPokemon.maxHp}`;
+  document.getElementById('player-health-fill').style.width =
+    (playerPokemon.hp / playerPokemon.maxHp * 100) + "%";
+  document.getElementById('player-attack').textContent = `ATK: ${playerPokemon.attack}`;
+  document.getElementById('player-spattack').textContent = `SP.ATK: ${playerPokemon.spAttack}`;
+  document.getElementById('player-speed').textContent = `SPD: ${playerPokemon.speed}`;
+
+  // 5) Update sprite
+  const sprite = document.getElementById('player-pokemon-sprite');
+  const backUrl  = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${playerPokemon.num}.png`;
+  const frontUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${playerPokemon.num}.png`;
+  sprite.src = backUrl;
+  sprite.onerror = () => {
+    sprite.src = frontUrl;
+    sprite.style.transform = "scaleX(-1)";
+  };
+
+  // 6) Close modal
+  switchModal.classList.add('hidden');
+}
+
 
