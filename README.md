@@ -13,7 +13,7 @@ This project is a Pokémon Game for CMSC433 at UMBC. Follow the instructions bel
 
 ## Step-by-Step Setup
 
-### 1. Clone the Repository
+### 1. Download the files and open in a IDE with a terminal set to path where your downloaded files are OR Clone the github with the command below
 
 ```bash
 git clone https://github.com/IsaiahByrd/cmsc433-pokemon-game.git
