@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Starter Pokémon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='viewcollection.css') }}">
+    <style>
+        .starter-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        .starter-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #000, 0 0 15px #5A67D8;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: headerEntrance 1.5s ease-out;
+        }
+        .starter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 24px;
+            justify-items: center;
+        }
+        .starter-card {
+            background: rgba(44, 62, 80, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(90, 103, 216, 0.3);
+            padding: 18px 10px 10px 10px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        .starter-card:hover {
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 0 8px 25px #5A67D8;
+            background: linear-gradient(45deg, #3730A3 80%, #5A67D8 100%);
+        }
+        .starter-sprite {
+            width: 96px;
+            height: 96px;
+            image-rendering: pixelated;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+        .starter-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 13px;
+            color: #fff;
+            text-shadow: 1px 1px 0px #000;
+            margin-bottom: 8px;
+        }
+        .choose-btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            padding: 8px 18px;
+            background: linear-gradient(45deg, #50C878, #3A9B5C);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .choose-btn:hover {
+            background: linear-gradient(45deg, #3A9B5C, #50C878);
+            transform: scale(1.07);
+        }
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #8B5CF6, #7C3AED);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            text-decoration: none;
+            z-index: 10;
+            box-shadow: 0 3px 12px rgba(139, 92, 246, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .back-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px #8B5CF6;
+        }
+        @media (max-width: 768px) {
+            .starter-title { font-size: 1.2rem; }
+            .starter-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+            .starter-card { padding: 10px 4px 8px 4px; }
+            .starter-sprite { width: 64px; height: 64px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- <a href="{{ url_for('menu') }}" class="back-button">← Back to Menu</a> -->
+    <div class="starter-container">
+        <div class="starter-title">Choose Your Starter Pokémon!</div>
+        <form method="post">
+            <div class="starter-grid">
+                {% for pokemon in pokemon_list %}
+                    {% if pokemon['Starter'] %}
+                        <div class="starter-card">
+                            <img class="starter-sprite"
+                                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{{ pokemon['Num'] }}.png"
+                                alt="{{ pokemon['Name'] }}">
+                            <div class="starter-name">{{ pokemon['Name'] }}</div>
+                            <button class="choose-btn" type="submit" name="pokemon_id" value="{{ pokemon['id'] }}">
+                                Choose
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+</body>
+</html>

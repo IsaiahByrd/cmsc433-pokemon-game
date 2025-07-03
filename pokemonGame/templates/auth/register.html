@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+    <div class="title">
+        <a href="{{ url_for('home')}}">
+            <img id="pokemonTitle" src="{{ url_for('static', filename='pokemon-title.png') }}">
+        </a>
+    </div>
+
+    <form class="loginForm" method="post">
+        <h1>Register</h1>
+        
+        <!-- Flash messages for feedback -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Random credentials option -->
+        <div class="random-option">
+            <label for="use_random">
+                <input type="checkbox" id="use_random" name="use_random" value="true">
+                Generate random username and password for me
+            </label>
+        </div>
+        
+        <div id="manual-fields">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required="required" value="{{ username|default('') }}" placeholder="Choose username">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required="required" placeholder="Create password">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required="required" placeholder="Confirm password">
+        </div>
+        
+        <input type="submit" id="submit" value="Register">
+    </form>
+    
+    <script>
+        // Toggle manual fields based on random option
+        document.getElementById('use_random').addEventListener('change', function() {
+            const manualFields = document.getElementById('manual-fields');
+            const inputs = manualFields.querySelectorAll('input');
+            
+            if (this.checked) {
+                manualFields.style.opacity = '0.5';
+                inputs.forEach(input => {
+                    input.required = false;
+                    input.disabled = true;
+                });
+            } else {
+                manualFields.style.opacity = '1';
+                inputs.forEach(input => {
+                    input.required = true;
+                    input.disabled = false;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

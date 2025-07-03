@@ -1,0 +1,463 @@
+.account{
+    position: absolute;
+    top: 20px;
+    right: 50px;
+    display: flex;
+    gap: 15px;
+    z-index: 10;
+}
+
+body {
+    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+/* Seamless star field with three overlapping layers */
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%; /* Extra height to ensure seamless overlap */
+    z-index: -1;
+}
+
+/* Create a third layer using a pseudo element on a container */
+body {
+    position: relative;
+}
+
+/* First star layer - Main pattern */
+body::before {
+    background-image: 
+        radial-gradient(2px 2px at 15% 20%, #fff, transparent),
+        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 35% 10%, #fff, transparent),
+        radial-gradient(1px 1px at 45% 60%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(2px 2px at 55% 35%, #fff, transparent),
+        radial-gradient(1px 1px at 65% 80%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 75% 15%, #fff, transparent),
+        radial-gradient(1px 1px at 85% 50%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 95% 70%, #fff, transparent),
+        radial-gradient(1px 1px at 5% 90%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 15% 65%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 25% 85%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 35% 45%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 45% 25%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 55% 75%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 65% 5%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 75% 55%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 85% 30%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 95% 85%, rgba(255,255,255,0.5), transparent);
+    background-size: 100vw 50vh;
+    background-repeat: repeat-y;
+    animation: starsFlow1 20s linear infinite;
+}
+
+/* Second star layer - Offset pattern */
+body::after {
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 30% 50%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 40% 20%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 50% 70%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 60% 45%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 70% 90%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(2px 2px at 80% 25%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 10% 80%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 20% 10%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 30% 75%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 40% 95%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 50% 35%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 60% 15%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 70% 65%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 80% 85%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 100% 20%, rgba(255,255,255,0.6), transparent);
+    background-size: 100vw 50vh;
+    background-repeat: repeat-y;
+    animation: starsFlow2 15s linear infinite;
+}
+
+@keyframes starsFlow1 {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50vh); }
+}
+
+@keyframes starsFlow2 {
+    0% { transform: translateY(-25vh); }
+    100% { transform: translateY(-75vh); }
+}
+
+#title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px; /* space between title and sprite */
+    margin-bottom: 50px;
+    animation: titleEntrance 2s ease-out;
+    position: relative;
+}
+
+@keyframes titleEntrance {
+    0% { 
+        opacity: 0; 
+        transform: translateY(-50px) scale(0.8); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+#titleContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#pokemonTitle {
+    max-width: 450px;
+    height: auto;
+    image-rendering: pixelated; /* keeps pixel art crisp */
+    filter: drop-shadow(0 4px 8px rgba(255,215,0,0.5));
+    animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+#battleText {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.2rem;
+    color: #dcd50d;
+    text-shadow: 
+        2px 2px 0px #000,
+        0 0 10px rgba(255,215,0,0.5);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: battleTextGlow 2s ease-in-out infinite alternate;
+    margin-top: -5px; /* Pull slightly closer to title */
+}
+
+@keyframes battleTextGlow {
+    0% { 
+        text-shadow: 
+            2px 2px 0px #000,
+            0 0 10px rgba(255,215,0,0.5);
+        transform: scale(1);
+    }
+    100% { 
+        text-shadow: 
+            2px 2px 0px #000,
+            0 0 15px rgba(255,215,0,0.8),
+            0 0 20px rgba(255,215,0,0.4);
+        transform: scale(1.02);
+    }
+}
+
+/* Keep h1 styles for other potential headings */
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    
+    /* 8-bit retro gaming font like old Pokemon games */
+    font-family: 'Press Start 2P', monospace;
+    
+    font-weight: 400; /* Press Start 2P looks best at normal weight */
+    font-size: 1.8rem; /* Slightly smaller for better readability with pixel font */
+    text-shadow: 2px 2px 0px #000; /* Sharp pixel-style shadow */
+    letter-spacing: 2px; /* Spacing between letters for retro feel */
+}
+
+.pixel-text { /* class for pixelated text */
+    font-family: 'Press Start 2P', monospace;
+}
+
+#titleSprite1, #titleSprite2 {
+    /* Style both Pokemon sprites to be exactly the same size */
+    width: 120px;
+    height: 120px;
+    
+    /* Force both images to fill the exact same dimensions */
+    object-fit: contain; /* Keeps aspect ratio, fits within dimensions */
+    
+    /* Initially hidden until loaded */
+    display: none;
+    
+    /* Remove margin/padding that might interfere */
+    margin: 0;
+    padding: 0;
+    
+    /* Ensure crisp pixel art */
+    image-rendering: pixelated;
+    
+    /* Ensure it doesn't break the flex layout */
+    flex-shrink: 0;
+    
+    /* Add hover and animation effects */
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+#titleSprite1 {
+    animation: bounceLeft 2s ease-in-out infinite;
+}
+
+#titleSprite2 {
+    animation: bounceRight 2s ease-in-out infinite;
+}
+
+@keyframes bounceLeft {
+    0%, 100% { transform: translateY(0) scaleX(-1); }
+    50% { transform: translateY(-10px) scaleX(-1); }
+}
+
+@keyframes bounceRight {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#titleSprite1:hover, #titleSprite2:hover {
+    transform: scale(1.1) !important;
+}
+
+/* Keep old titleSprite for backwards compatibility */
+#titleSprite {
+    /* make the sprite bigger - you can adjust these values */
+    width: 70px;  /* smaller size to fit nicely with title */
+    height: 70px;
+    
+    /* remove margin/padding that might interfere */
+    margin: 0;
+    padding: 0;
+    
+    /* ensure it doesn't break the flex layout */
+    flex-shrink: 0;
+}
+
+/* play now button */
+#playButton {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #5A67D8, #4C51BF);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 
+        0 4px 15px rgba(90, 103, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: buttonPulse 2s ease-in-out infinite;
+}
+
+#playButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+#playButton:hover::before {
+    left: 100%;
+}
+
+#playButton:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 8px 25px rgba(90, 103, 216, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    background: linear-gradient(45deg, #4C51BF, #3730A3);
+}
+
+#playButton:active {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 
+        0 4px 15px rgba(90, 103, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+@keyframes buttonPulse {
+    0%, 100% { box-shadow: 0 4px 15px rgba(90, 103, 216, 0.4); }
+    50% { box-shadow: 0 4px 20px rgba(90, 103, 216, 0.6); }
+}
+
+/* Login and Register Buttons */
+#loginButton, #registerButton {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 80px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+#loginButton::before, #registerButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+#loginButton:hover::before, #registerButton:hover::before {
+    left: 100%;
+}
+
+/* Login Button - Blue space theme */
+#loginButton {
+    background: linear-gradient(45deg, #4A90E2, #357ABD);
+    box-shadow: 
+        0 3px 12px rgba(74, 144, 226, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+#loginButton:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 6px 20px rgba(74, 144, 226, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    background: linear-gradient(45deg, #357ABD, #2E5984);
+}
+
+/* Register Button - Green space theme */
+#registerButton {
+    background: linear-gradient(45deg, #50C878, #3A9B5C);
+    box-shadow: 
+        0 3px 12px rgba(80, 200, 120, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+#registerButton:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 6px 20px rgba(80, 200, 120, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    background: linear-gradient(45deg, #3A9B5C, #2D7A47);
+}
+
+/* User info styling */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.welcome-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #ffffff;
+    text-shadow: 1px 1px 0px #000;
+    letter-spacing: 1px;
+}
+
+/* Logout Button - Red theme */
+#logoutButton {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 80px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    background: linear-gradient(45deg, #FF6B35, #E55934);
+    box-shadow: 
+        0 3px 12px rgba(255, 107, 53, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+#logoutButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+#logoutButton:hover::before {
+    left: 100%;
+}
+
+#logoutButton:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 6px 20px rgba(255, 107, 53, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    background: linear-gradient(45deg, #E55934, #CC4125);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #title {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    #pokemonTitle {
+        max-width: 300px;
+    }
+    
+    #titleSprite1, #titleSprite2 {
+        width: 80px;
+        height: 80px;
+    }
+    
+    #pokemonTitle {
+        max-width: 300px;
+    }
+    
+    #battleText {
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
+    
+    #playButton {
+        font-size: 14px;
+        padding: 12px 24px;
+    }
+}
+
+
+

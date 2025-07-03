@@ -1,0 +1,463 @@
+/* Battle page - Space theme styling */
+body {
+    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+    background-attachment: fixed;
+    font-family: 'Press Start 2P', monospace;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Starfield background - enhanced for battle */
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    z-index: -1;
+}
+
+/* First star layer */
+body::before {
+    background-image: 
+        radial-gradient(2px 2px at 15% 20%, #fff, transparent),
+        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 35% 10%, #fff, transparent),
+        radial-gradient(1px 1px at 45% 60%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(2px 2px at 55% 35%, #fff, transparent),
+        radial-gradient(1px 1px at 65% 80%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 75% 15%, #fff, transparent),
+        radial-gradient(1px 1px at 85% 50%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 95% 70%, #fff, transparent),
+        radial-gradient(1px 1px at 5% 90%, rgba(255,255,255,0.6), transparent);
+    background-size: 100% 100%;
+}
+
+/* Second star layer for depth */
+body::after {
+    background-image: 
+        radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 60% 20%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1px 1px at 80% 80%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.5), transparent);
+    background-size: 120% 120%;
+    animation: twinkle 8s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.8; }
+}
+
+.battlefield{
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 600px;
+    margin: 20px;
+    background: rgba(44, 62, 80, 0.3);
+    border-radius: 15px;
+    border: 2px solid rgba(90, 103, 216, 0.5);
+    box-shadow: 0 0 30px rgba(90, 103, 216, 0.3);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+/* Battle ground effect */
+.battlefield::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to top, 
+        rgba(90, 103, 216, 0.3) 0%, 
+        rgba(90, 103, 216, 0.1) 50%, 
+        transparent 100%);
+    border-radius: 0 0 15px 15px;
+}
+
+/* Battle ground line */
+.battlefield::after {
+    content: '';
+    position: absolute;
+    bottom: 30px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: linear-gradient(to right, 
+        transparent 0%, 
+        rgba(90, 103, 216, 0.6) 20%, 
+        rgba(90, 103, 216, 0.8) 50%, 
+        rgba(90, 103, 216, 0.6) 80%, 
+        transparent 100%);
+    box-shadow: 0 0 10px rgba(90, 103, 216, 0.5);
+}
+
+.friendlyPokemon{
+    position: absolute;
+    bottom: 120px;
+    left: 300px;
+    width: 120px;
+    height: 120px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 10px rgba(80, 200, 120, 0.5));
+}
+
+.opponentPokemon{
+    position: absolute;
+    top: 80px;
+    right: 300px;
+    width: 120px;
+    height: 120px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+}
+
+.health-bar{
+    width: 150px;
+    height: 12px;
+    background: rgba(60, 60, 60, 0.8);
+    border-radius: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+}
+
+.health-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #50C878, #90EE90);
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.pokemon-container-friendly{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.pokemon-container-opponent{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.pokemon-info{
+    padding: 15px 20px;
+    background: rgba(44, 62, 80, 0.9);
+    border-radius: 10px;
+    border: 2px solid rgba(90, 103, 216, 0.6);
+    box-shadow: 0 0 15px rgba(90, 103, 216, 0.3);
+    min-width: 200px;
+}
+
+.pokemon-name{
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.hp, .friendly-hp, .attack, .spattack, .speed {
+    font-size: 11px;
+    color: #E2E8F0;
+    margin: 4px 0;
+    display: block;
+}
+
+/* Battle Controls */
+.battle-controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.battle-button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    padding: 12px 20px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 120px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.battle-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.battle-button:hover::before {
+    left: 100%;
+}
+
+.battle-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Attack Button - Red */
+#attack-btn {
+    background: linear-gradient(45deg, #FF6B35, #F7931E);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+}
+
+#attack-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+}
+
+/* Special Attack Button - Purple */
+#spattack-btn {
+    background: linear-gradient(45deg, #8B5CF6, #7C3AED);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+#spattack-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+}
+
+/* Catch Button - Green */
+#catch-btn {
+    background: linear-gradient(45deg, #50C878, #48BB78);
+    box-shadow: 0 4px 15px rgba(80, 200, 120, 0.4);
+}
+
+#catch-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(80, 200, 120, 0.6);
+}
+
+/* Home Button - Blue */
+#home-btn {
+    background: linear-gradient(45deg, #5A67D8, #4C51BF);
+    box-shadow: 0 4px 15px rgba(90, 103, 216, 0.4);
+}
+
+#home-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(90, 103, 216, 0.6);
+}
+
+/* Heal Button - Green */
+#heal-btn {
+    background: linear-gradient(45deg, #10B981, #059669);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+#heal-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+}
+
+#heal-btn:disabled {
+    background: linear-gradient(45deg, #6B7280, #4B5563);
+    box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
+}
+
+/* Post-battle options */
+#post-battle-options {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#fight-another-btn, #go-home-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 10px 16px;
+    margin: 0 8px;
+    background: linear-gradient(45deg, #5A67D8, #4C51BF);
+    box-shadow: 0 4px 15px rgba(90, 103, 216, 0.4);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+#fight-another-btn:hover, #go-home-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(90, 103, 216, 0.6);
+}
+
+/* Battle messages and alerts */
+.battle-message {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+    background: rgba(44, 62, 80, 0.9);
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid rgba(90, 103, 216, 0.6);
+    margin: 10px 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .battlefield {
+        width: 95%;
+        height: 400px;
+        margin: 10px;
+    }
+    
+    .friendlyPokemon {
+        left: 50px;
+        bottom: 80px;
+        width: 80px;
+        height: 80px;
+    }
+    
+    .opponentPokemon {
+        right: 50px;
+        top: 60px;
+        width: 80px;
+        height: 80px;
+    }
+    
+    .pokemon-info {
+        padding: 10px 15px;
+        min-width: 150px;
+    }
+    
+    .pokemon-name {
+        font-size: 11px;
+    }
+    
+    .hp, .friendly-hp, .attack, .spattack, .speed {
+        font-size: 9px;
+    }
+    
+    .battle-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .battle-button {
+        font-size: 10px;
+        padding: 10px 16px;
+        min-width: 100px;
+    }
+}
+
+
+/* Switch Modal Styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: rgba(44, 62, 80, 0.95);
+    border: 2px solid rgba(90, 103, 216, 0.6);
+    box-shadow: 0 0 25px rgba(90, 103, 216, 0.4);
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    color: white;
+    font-family: 'Press Start 2P', monospace;
+}
+
+.modal-content h3 {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.pokemon-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.pokemon-options button {
+    background: linear-gradient(45deg, #50C878, #48BB78);
+    border: none;
+    color: white;
+    font-family: 'Press Start 2P', monospace;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pokemon-options button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(80, 200, 120, 0.5);
+}
+
+#cancel-switch-btn {
+    background: linear-gradient(45deg, #6B7280, #4B5563);
+    color: white;
+    font-family: 'Press Start 2P', monospace;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#cancel-switch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Hidden helper */
+.hidden {
+    display: none;
+}
+
+#switch-btn {
+    z-index: 10;
+    position: relative;
+}
+
+#switch-btn:disabled {
+  pointer-events: auto !important;
+  cursor: pointer    !important;
+}
+

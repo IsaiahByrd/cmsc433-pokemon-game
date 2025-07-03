@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Collection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='viewcollection.css') }}">
+</head>
+<body>
+    <a href="{{ url_for('menu') }}" class="back-button">← Back to Menu</a>
+    
+    <div class="collection-container">
+        <div class="collection-header">
+            <h1 class="collection-title">Pokémon Collection</h1>
+            <div class="collection-stats">
+                {{ collected_count }} / {{ total_pokemon }} Collected 
+                ({{ "%.1f"|format(collection_percentage) }}%)
+            </div>
+            <div class="page-info">
+                Page {{ current_page }} of {{ total_pages }} 
+                ({{ total_filtered }} Pokémon{{ ' filtered' if filter_type != 'all' else '' }})
+            </div>
+        </div>
+        
+        <div class="filter-controls">
+            <a href="{{ url_for('viewcollection', page=1, filter='all') }}" 
+               class="filter-button {{ 'active' if filter_type == 'all' else '' }}">All Pokemon</a>
+            <a href="{{ url_for('viewcollection', page=1, filter='collected') }}" 
+               class="filter-button {{ 'active' if filter_type == 'collected' else '' }}">Collected Only</a>
+            <a href="{{ url_for('viewcollection', page=1, filter='uncollected') }}" 
+               class="filter-button {{ 'active' if filter_type == 'uncollected' else '' }}">Not Collected</a>
+            <a href="{{ url_for('viewcollection', page=1, filter='legendary') }}" 
+               class="filter-button {{ 'active' if filter_type == 'legendary' else '' }}">Legendary</a>
+        </div>
+        
+        <!-- Pagination Controls -->
+        <div class="pagination-controls">
+            {% if has_prev %}
+                <a href="{{ url_for('viewcollection', page=current_page-1, filter=filter_type) }}" 
+                   class="pagination-button prev-button">← Previous</a>
+            {% else %}
+                <span class="pagination-button prev-button disabled">← Previous</span>
+            {% endif %}
+            
+            <div class="page-numbers">
+                {% set start_page = [1, current_page - 2]|max %}
+                {% set end_page = [total_pages, current_page + 2]|min %}
+                
+                {% if start_page > 1 %}
+                    <a href="{{ url_for('viewcollection', page=1, filter=filter_type) }}" 
+                       class="page-number">1</a>
+                    {% if start_page > 2 %}
+                        <span class="page-ellipsis">...</span>
+                    {% endif %}
+                {% endif %}
+                
+                {% for page_num in range(start_page, end_page + 1) %}
+                    {% if page_num == current_page %}
+                        <span class="page-number current">{{ page_num }}</span>
+                    {% else %}
+                        <a href="{{ url_for('viewcollection', page=page_num, filter=filter_type) }}" 
+                           class="page-number">{{ page_num }}</a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if end_page < total_pages %}
+                    {% if end_page < total_pages - 1 %}
+                        <span class="page-ellipsis">...</span>
+                    {% endif %}
+                    <a href="{{ url_for('viewcollection', page=total_pages, filter=filter_type) }}" 
+                       class="page-number">{{ total_pages }}</a>
+                {% endif %}
+            </div>
+            
+            {% if has_next %}
+                <a href="{{ url_for('viewcollection', page=current_page+1, filter=filter_type) }}" 
+                   class="pagination-button next-button">Next →</a>
+            {% else %}
+                <span class="pagination-button next-button disabled">Next →</span>
+            {% endif %}
+        </div>
+        
+        <div class="pokemon-grid" id="pokemonGrid">
+            {% for pokemon in pokemon_list %}
+            <div class="pokemon-card {{ 'collected' if pokemon.collected else 'uncollected' }}" 
+                 data-pokemon-id="{{ pokemon.id }}"
+                 data-collected="{{ 'true' if pokemon.collected else 'false' }}"
+                 data-legendary="{{ 'true' if pokemon.Legendary else 'false' }}">
+                
+                {% if pokemon.collected %}
+                <div class="collected-badge"></div>
+                {% endif %}
+                
+                <div class="pokemon-number">#{{ "%03d"|format(pokemon.Num) }}</div>
+                
+                <img src="{{ pokemon.sprite_url }}" 
+                     alt="{{ pokemon.Name }}" 
+                     class="pokemon-sprite"
+                     loading="lazy"
+                     decoding="async"
+                     onerror="this.onerror=null; this.src='{{ pokemon.fallback_sprite }}'; if(this.onerror) this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png';"
+                     onload="this.style.opacity='1';"
+                     style="opacity: 0; transition: opacity 0.3s ease;">
+                
+                <div class="pokemon-name">{{ pokemon.Name }}</div>
+                
+                <div class="pokemon-types">
+                    <span class="type-badge type-{{ pokemon.Type1.lower() }}">{{ pokemon.Type1 }}</span>
+                    {% if pokemon.Type2 %}
+                    <span class="type-badge type-{{ pokemon.Type2.lower() }}">{{ pokemon.Type2 }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="pokemon-stats">
+                    Total: {{ pokemon.Total }}
+                    {% if pokemon.Legendary %}
+                    <br>★ Legendary ★
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // Simplified JavaScript for paginated collection
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add smooth fade-in animation for cards
+            const cards = document.querySelectorAll('.pokemon-card');
+            
+            // Use Intersection Observer for better performance
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '0';
+                            entry.target.style.transform = 'translateY(20px)';
+                            entry.target.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                            
+                            requestAnimationFrame(() => {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            });
+                        }, index * 20); // Staggered animation
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => observer.observe(card));
+            
+            // Optimize image loading
+            const sprites = document.querySelectorAll('.pokemon-sprite');
+            sprites.forEach(sprite => {
+                sprite.addEventListener('load', () => {
+                    sprite.style.opacity = '1';
+                });
+                
+                sprite.addEventListener('error', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            // Add click functionality to Pokemon cards for collection toggle
+            cards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    // Don't toggle if clicking on links or buttons
+                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+                    
+                    const pokemonId = card.dataset.pokemonId;
+                    togglePokemonCollection(pokemonId, card);
+                });
+            });
+        });
+        
+        // Function to toggle Pokemon collection status
+        async function togglePokemonCollection(pokemonId, cardElement) {
+            try {
+                const response = await fetch(`/toggle_pokemon/${pokemonId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Update card appearance
+                    const isCollected = result.action === 'added';
+                    cardElement.dataset.collected = isCollected ? 'true' : 'false';
+                    
+                    if (isCollected) {
+                        cardElement.classList.remove('uncollected');
+                        cardElement.classList.add('collected');
+                        cardElement.querySelector('.collected-badge').style.display = 'block';
+                    } else {
+                        cardElement.classList.remove('collected');
+                        cardElement.classList.add('uncollected');
+                        cardElement.querySelector('.collected-badge').style.display = 'none';
+                    }
+                    
+                    // Show feedback
+                    showToast(`Pokémon ${result.action} ${isCollected ? 'to' : 'from'} collection!`);
+                } else {
+                    showToast('Failed to update collection', 'error');
+                }
+            } catch (error) {
+                console.error('Error toggling Pokemon:', error);
+                showToast('Error updating collection', 'error');
+            }
+        }
+        
+        // Simple toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#ff4444' : '#44ff44'};
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-family: 'Press Start 2P', monospace;
+                font-size: 10px;
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Fade in
+            requestAnimationFrame(() => {
+                toast.style.opacity = '1';
+            });
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Keyboard navigation for pagination
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                const prevButton = document.querySelector('.prev-button:not(.disabled)');
+                if (prevButton) prevButton.click();
+            } else if (e.key === 'ArrowRight') {
+                const nextButton = document.querySelector('.next-button:not(.disabled)');
+                if (nextButton) nextButton.click();
+            }
+        });
+    </script>
+</body>
+</html>

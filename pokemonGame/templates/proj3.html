@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Battle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='proj3.css') }}">
+    <script src="{{ url_for('static', filename='proj3.js') }}" async></script>
+</head>
+<body>
+    <div class="account">
+        {% if session.username %}
+            <div class="user-info">
+                <span class="welcome-text">Welcome, {{ session.username }}!</span>
+                <a href="{{ url_for('logout') }}">
+                    <button id="logoutButton" type="button">Logout</button>
+                </a>
+            </div>
+        {% else %}
+            <a href="{{ url_for('login') }}">
+                <button id="loginButton" type="button">Login</button>
+            </a>
+            <a href="{{ url_for('register') }}">
+                <button id="registerButton" type="button">Register</button>
+            </a>
+        {% endif %}
+    </div>
+
+    <div id="title">    
+        <img id="titleSprite1">
+        <div id="titleContainer">
+            <img id="pokemonTitle">
+            <div id="battleText">Battle</div>
+        </div>
+        <img id="titleSprite2">
+    </div>
+
+    <br><br><br>
+    {% if session.username %}
+        <a href="{{ url_for('menu') }}">
+            <button id="playButton" type="button">Play Now</button>
+        </a>
+    {% else %}
+        <button id="playButton" type="button" disabled title="Please log in to play">Log In To Play Now</button>
+    {% endif %}
+    </a>
+</body>
+</html>

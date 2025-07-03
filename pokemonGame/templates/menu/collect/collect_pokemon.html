@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collect Pokemon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='collect_pokemon.css') }}">
+</head>
+<body>
+    <div id="collectContainer">
+        <div id="collectTitle">
+            <h1>Collect Pokemon</h1>
+            <p>Battle wild Pokemon and collect them when their HP drops below 25%!</p>
+        </div>
+
+        <!-- Pre-battle screen -->
+        <div id="preBattleScreen">
+            <div id="yourTeam">
+                <h2>Your Team</h2>
+                <div id="teamDisplay">
+                    {% for pokemon in user_team %}
+                    <div class="team-pokemon">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ pokemon.Num }}.png" 
+                             alt="{{ pokemon.Name }}">
+                        <div class="pokemon-info">
+                            <strong>{{ pokemon.Name|title }}</strong>
+                            <div>HP: {{ pokemon.HP }}</div>
+                            <div>ATK: {{ pokemon.Attack }}</div>
+                            <div>SP.ATK: {{ pokemon['Sp. Atk'] }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <button id="startBattleBtn" class="action-button">Start Battle</button>
+            <a href="{{ url_for('menu') }}" class="back-button">← Back to Menu</a>
+        </div>
+
+        <!-- Battle screen -->
+        <div id="battleScreen" style="display: none;">
+            <div id="battleArena">
+                <!-- Enemy Pokemon Display -->
+                <div id="enemyTeamDisplay">
+                    <h3>Wild Pokemon</h3>
+                    <div id="enemyTeam"></div>
+                </div>
+
+                <!-- Current Battle Display -->
+                <div id="currentBattle">
+                    <div id="enemyPokemonDisplay">
+                        <div id="enemyInfo">
+                            <span id="enemyName">Enemy</span>
+                            <div id="enemyHP">
+                                <span id="enemyHPText">HP: 0/0</span>
+                                <div class="hp-bar">
+                                    <div id="enemyHPBar" class="hp-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <img id="enemySprite" src="" alt="Enemy Pokemon">
+                    </div>
+
+                    <div id="userPokemonDisplay">
+                        <div id="userInfo">
+                            <span id="userName">Your Pokemon</span>
+                            <div id="userHP">
+                                <span id="userHPText">HP: 0/0</span>
+                                <div class="hp-bar">
+                                    <div id="userHPBar" class="hp-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <img id="userSprite" src="" alt="Your Pokemon">
+                    </div>
+                </div>
+
+                <!-- Battle Actions -->
+                <div id="battleActions">
+                    <button id="attackBtn" class="battle-button">Attack</button>
+                    <button id="specialAttackBtn" class="battle-button">Special Attack</button>
+                    <button id="collectBtn" class="battle-button collect-button">Collect Pokemon</button>
+                    <button id="switchBtn" class="battle-button">Switch Pokemon</button>
+                </div>
+
+                <!-- Pokemon Switch Panel -->
+                <div id="switchPanel" style="display: none;">
+                    <h3>Choose Pokemon to Switch In</h3>
+                    <div id="switchOptions"></div>
+                    <button id="cancelSwitchBtn" class="battle-button">Cancel</button>
+                </div>
+
+                <!-- Battle Log -->
+                <div id="battleLog">
+                    <h3>Battle Log</h3>
+                    <div id="logContent"></div>
+                </div>
+            </div>
+
+            <div id="battleResult" style="display: none;">
+                <h2 id="battleResultTitle">Battle Complete!</h2>
+                <div id="battleResultContent"></div>
+                <button id="newBattleBtn" class="action-button">Start New Battle</button>
+                <a href="{{ url_for('menu') }}" class="back-button">← Back to Menu</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='collect_pokemon.js') }}"></script>
+</body>
+</html>
