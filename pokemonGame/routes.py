@@ -26,7 +26,7 @@ def home():
 
 @app.route('/menu')
 def menu():
-    return render_template('menu/menu.html')
+    return render_template('menu/menu.php')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

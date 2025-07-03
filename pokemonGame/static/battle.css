@@ -401,6 +401,17 @@ body::after {
     color: white;
     font-family: 'Press Start 2P', monospace;
 }
+#switch-btn {
+    background: linear-gradient(45deg, #FFD600, #FFEA70);
+    box-shadow: 0 4px 15px rgba(255, 214, 0, 0.4);
+    color: #232946;
+}
+
+#switch-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 214, 0, 0.6);
+    background: linear-gradient(45deg, #FFEA70, #FFD600);
+}
 
 .modal-content h3 {
     font-size: 14px;
