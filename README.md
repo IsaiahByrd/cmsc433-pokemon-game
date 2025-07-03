@@ -13,17 +13,18 @@ This project is a Pokémon Game for CMSC433 at UMBC. Follow the instructions bel
 
 ## Step-by-Step Setup
 
-### 1. Download the files and open in a IDE with a terminal set to path where your downloaded files are OR Clone the github with the command below
-
-```bash
-git clone https://github.com/IsaiahByrd/cmsc433-pokemon-game.git
-cd cmsc433-pokemon-game
-```
+### 1. Extract the Zipped Folder
+- Download and unzip the project folder.
+- Open a new terminal window and open the unzipped folder ex: ```bash cd ../cmsc433-pokemon-game```
 
 ### 2. Create a Virtual Environment
 ```bash
 python -m venv venv
 ```
+#### For MacOS:
+```bash
+python3 -m venv venv
+``` 
 
 - On Windows, activate with:
 ```bash
@@ -72,7 +73,7 @@ This step is required before running ``` pip install -r requirements.txt```.
   ```
 
 ### 4. Install Python Dependencies
-Make sure you're in the project root (same level as requirements.txt), then run:
+Make sure you're still in the project folder (with requirements.txt) and your virtual environment is active:
 ```bash
 pip install -r requirements.txt
 ```
@@ -89,13 +90,15 @@ pip freeze > requirements.txt
 * Start Apache Web Server and MySQL Database
 * Go to http://localhost/phpmyadmin/ in your browser
 
-### 6. Load the Database via `createAll.sql`
-* Go back to the cloned repository and open the `createAll.sql` file
+### 6. Load the Database via `proj3.sql` **ONLY ONCE**
+* Open the `proj3.sql` file in a text editor
 * Copy all the contents of the file
-* Paste the content into the SQL tab in the phpMyAdmin page and execute it
+* Paste the content into the SQL tab in the phpMyAdmin page and execute it (only has to be done once)
+
+This sets up the database structure and initial data.
 
 ### 7. Set Up the Database and Authentication Tables
-Run these setup scripts **ONLY ONCE** when first setting up the project:
+Run these setup scripts **ONCE** when first setting up the project:
 
 ```bash
 python db_setup.py        # Loads Pokémon data from Excel into the database
